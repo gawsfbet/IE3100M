@@ -139,13 +139,13 @@ public class Solver {
         }
         
         //Weight constraints
-        IloLinearNumExpr[] Xweightsum = new IloLinearNumExpr[m];
+        IloLinearNumExpr[] XsumWeight = new IloLinearNumExpr[m];
         for (int j = 0; j < m; j++) {
-            Xweightsum[j] = cplex.linearNumExpr();
+            XsumWeight[j] = cplex.linearNumExpr();
             for (int i = 0; i < n; i++) {
-                Xweightsum[j].addTerm(boxes[i].getWeight(), X[i][j]);
+                XsumWeight[j].addTerm(boxes[i].getWeight(), X[i][j]);
             }
-            cplex.addLe(Xweightsum[j], 30);
+            cplex.addLe(XsumWeight[j], 30);
         }
     }
 }
