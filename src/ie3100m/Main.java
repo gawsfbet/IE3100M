@@ -28,7 +28,7 @@ public class Main {
                 candidateBins.add(new Level3_Bin(390, 380, 380));
             }
             
-            Solver solver = new Solver(box, 12, candidateBins);
+            Solver solver = new Solver(box, 20, candidateBins);
             solver.optimize();
         } catch (IloException ex) {
             ex.printStackTrace();
