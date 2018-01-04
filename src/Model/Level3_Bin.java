@@ -14,6 +14,12 @@ public class Level3_Bin {
     private int width;
     private int height;
     
+    public Level3_Bin(int length, int width, int height) {
+        this.length = length;
+        this.width = width;
+        this.height = height;
+    }
+    
     public int getLength() {
         return this.length;
     }

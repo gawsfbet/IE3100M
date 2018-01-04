@@ -149,8 +149,16 @@ public class Solver {
             cplex.addLe(XsumWeight[j], 30);
         }
         
+        System.out.println("Solving...");
         if (cplex.solve()) {
             System.out.println("Objective: " + cplex.getObjValue());
+            
+            for (int i = 0; i < m; i++) {
+                if (cplex.getValue(Y[i]) > 0) {
+                    System.out.println("Bin size used: " + bins[i].toString());
+                    System.out.println("Num of boxes: " + Math.round(cplex.getValue(Xsum[i])));
+                }
+            }
         } else {
             System.out.println("Solution not found.");
         }
