@@ -93,6 +93,7 @@ public class Solver {
         cplex.addMinimize(objective);
         
         //constraints
+        //Lvl 2 box spatial constraints
         for (int i = 0; i < n; i++) {
             cplex.addEq(cplex.sum(X[i]), 1);
             
@@ -106,6 +107,7 @@ public class Solver {
             }
         }
         
+        //Comparing box constraints
         for (int k = 0; k < n; k++) {
             for (int i = 0; i < k; i++) {
                 for (int j = 0; j < m; j++) {
@@ -114,6 +116,7 @@ public class Solver {
             }
         }
         
+        //Lvl 3 Bin spatial constraints
         for (int j = 0; j < m; j++) {
             for (int i = 0; i < n; i++) {
                 cplex.addLe(cplex.sum(x[i], cplex.prod(boxes[i].getLength(), isHorizontal[i]), cplex.prod(boxes[i].getWidth(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
@@ -122,6 +125,27 @@ public class Solver {
                         cplex.sum(bins[j].getWidth(), cplex.prod(M, cplex.sum(1, cplex.prod(-1, X[i][j])))));
                 cplex.addLe(cplex.sum(z[i], boxes[i].getHeight()), cplex.sum(bins[j].getHeight(), cplex.prod(M, cplex.sum(1, cplex.prod(-1, X[i][j])))));
             }
+        }
+        
+        //Lvl 3 bin selection constraints
+        IloLinearIntExpr[] Xsum = new IloLinearIntExpr[m];
+        for (int j = 0; j < m; j++) {
+            Xsum[j] = cplex.linearIntExpr();
+            for (int i = 0; i < n; i++) {
+                Xsum[j].addTerm(1, X[i][j]);
+            }
+            cplex.addLe(Y[j], Xsum[j]);
+            cplex.addLe(Xsum[j], cplex.prod(M, Y[j]));
+        }
+        
+        //Weight constraints
+        IloLinearNumExpr[] Xweightsum = new IloLinearNumExpr[m];
+        for (int j = 0; j < m; j++) {
+            Xweightsum[j] = cplex.linearNumExpr();
+            for (int i = 0; i < n; i++) {
+                Xweightsum[j].addTerm(boxes[i].getWeight(), X[i][j]);
+            }
+            cplex.addLe(Xweightsum[j], 30);
         }
     }
 }
