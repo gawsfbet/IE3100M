@@ -21,29 +21,28 @@ import java.util.Arrays;
 //kevin's branch
 public class Solver {
     private IloCplex cplex;
-    private final int n; //number of level 2 boxes
+    private final int n; //number of level 2 box
     private final int m; //number of level 3 bins
     
     private static final int M = 2000000000; //large integer (2 billion)
     
-    private Level2_Box[] boxes;
+    private Level2_Box box;
     private Level3_Bin[] bins;
     
-    private int[] boxVolumes;
+    private int boxVolume;
     private int[] binVolumes;
     
-    public Solver(ArrayList<Level2_Box> boxes, ArrayList<Level3_Bin> bins) throws IloException {
+    public Solver(Level2_Box box, int n, ArrayList<Level3_Bin> bins) throws IloException {
         this.cplex = new IloCplex();
         
-        this.boxes = boxes.toArray(new Level2_Box[0]);
+        this.box = box;
         this.bins = bins.toArray(new Level3_Bin[0]);
-        this.n = boxes.size();
+        this.n = n;
         this.m = bins.size();
         
-        this.boxVolumes = new int[n];
-        this.binVolumes = new int[m];
+        this.boxVolume = box.getVolume();
         
-        Arrays.parallelSetAll(boxVolumes, i -> this.boxes[i].getVolume());
+        this.binVolumes = new int[m];
         Arrays.parallelSetAll(binVolumes, i -> this.bins[i].getVolume());
     }
     
@@ -83,7 +82,7 @@ public class Solver {
             boxVolExpr = cplex.linearIntExpr();
             
             for (int i = 0; i < n; i++) {
-                boxVolExpr.addTerm(boxVolumes[i], X[i][j]);
+                boxVolExpr.addTerm(boxVolume, X[i][j]);
             }
             
             binVolExpr[j] = cplex.prod(Y[j], cplex.sum(binVolumes[j], cplex.prod(-1, boxVolExpr)));
@@ -99,11 +98,11 @@ public class Solver {
             
             for (int k = 0; k < n; k++) {
                 if (i == k) continue;
-                cplex.addLe(cplex.sum(x[i], cplex.prod(boxes[i].getLength(), isHorizontal[i]), cplex.prod(boxes[i].getWidth(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))),
+                cplex.addLe(cplex.sum(x[i], cplex.prod(box.getLength(), isHorizontal[i]), cplex.prod(box.getWidth(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))),
                         cplex.sum(x[k], cplex.prod(M, cplex.sum(1, cplex.prod(-1, leftOf[i][k])))));
-                cplex.addLe(cplex.sum(y[i], cplex.prod(boxes[i].getWidth(), isHorizontal[i]), cplex.prod(boxes[i].getLength(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))),
+                cplex.addLe(cplex.sum(y[i], cplex.prod(box.getWidth(), isHorizontal[i]), cplex.prod(box.getLength(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))),
                         cplex.sum(y[k], cplex.prod(M, cplex.sum(1, cplex.prod(-1, frontOf[i][k])))));
-                cplex.addLe(cplex.sum(z[i], boxes[i].getHeight()), cplex.sum(z[k], cplex.prod(M, cplex.sum(1, cplex.prod(-1, belowOf[i][k])))));
+                cplex.addLe(cplex.sum(z[i], box.getHeight()), cplex.sum(z[k], cplex.prod(M, cplex.sum(1, cplex.prod(-1, belowOf[i][k])))));
             }
         }
         
@@ -119,11 +118,11 @@ public class Solver {
         //Lvl 3 Bin spatial constraints
         for (int j = 0; j < m; j++) {
             for (int i = 0; i < n; i++) {
-                cplex.addLe(cplex.sum(x[i], cplex.prod(boxes[i].getLength(), isHorizontal[i]), cplex.prod(boxes[i].getWidth(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
+                cplex.addLe(cplex.sum(x[i], cplex.prod(box.getLength(), isHorizontal[i]), cplex.prod(box.getWidth(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
                         cplex.sum(bins[j].getLength(), cplex.prod(M, cplex.sum(1, cplex.prod(-1, X[i][j])))));
-                cplex.addLe(cplex.sum(y[i], cplex.prod(boxes[i].getWidth(), isHorizontal[i]), cplex.prod(boxes[i].getLength(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
+                cplex.addLe(cplex.sum(y[i], cplex.prod(box.getWidth(), isHorizontal[i]), cplex.prod(box.getLength(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
                         cplex.sum(bins[j].getWidth(), cplex.prod(M, cplex.sum(1, cplex.prod(-1, X[i][j])))));
-                cplex.addLe(cplex.sum(z[i], boxes[i].getHeight()), cplex.sum(bins[j].getHeight(), cplex.prod(M, cplex.sum(1, cplex.prod(-1, X[i][j])))));
+                cplex.addLe(cplex.sum(z[i], box.getHeight()), cplex.sum(bins[j].getHeight(), cplex.prod(M, cplex.sum(1, cplex.prod(-1, X[i][j])))));
             }
         }
         
@@ -143,7 +142,7 @@ public class Solver {
         for (int j = 0; j < m; j++) {
             XsumWeight[j] = cplex.linearNumExpr();
             for (int i = 0; i < n; i++) {
-                XsumWeight[j].addTerm(boxes[i].getWeight(), X[i][j]);
+                XsumWeight[j].addTerm(box.getWeight(), X[i][j]);
             }
             cplex.addLe(XsumWeight[j], 30);
         }
