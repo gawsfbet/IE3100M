@@ -146,5 +146,11 @@ public class Solver {
             }
             cplex.addLe(XsumWeight[j], 30);
         }
+        
+        if (cplex.solve()) {
+            System.out.println("Objective: " + cplex.getObjValue());
+        } else {
+            System.out.println("Solution not found.");
+        }
     }
 }
