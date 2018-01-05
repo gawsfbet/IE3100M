@@ -19,7 +19,8 @@ public class Main {
     public static void main(String[] args) {
         try {
             Level2_Box box = new Level2_Box(190, 190, 100, 0.65); //in mm and g
-            Level3_Bin bin = new Level3_Bin(440, 440, 190);
+            Level3_Bin bin = new Level3_Bin(570, 400, 260);
+            //Level3_Bin bin = new Level3_Bin(570, 400, 260);
             
             /*ArrayList<Level3_Bin> candidateBins = new ArrayList<>();
             
@@ -38,6 +39,6 @@ public class Main {
     }
     
     private static int calcUpperBound(Level2_Box box, Level3_Bin bin) {
-        return bin.getVolume() / box.getVolume();
+        return bin.getBaseArea() / box.getBaseArea();
     }
 }

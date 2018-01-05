@@ -32,6 +32,10 @@ public class Level3_Bin {
         return this.height;
     }
     
+    public int getBaseArea() {
+        return this.length * this.width;
+    }
+    
     public int getVolume() {
         return this.length * this.width * this.height;
     }

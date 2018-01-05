@@ -35,6 +35,10 @@ public class Level2_Box {
         return this.height;
     }
     
+    public int getBaseArea() {
+        return this.length * this.width;
+    }
+    
     public int getVolume() {
         return this.length * this.width * this.height;
     }
