@@ -13,15 +13,17 @@ public class Level3_Bin {
     private int length;
     private int width;
     private int height;
-    private int _boxNum;
+    private int _maxBoxNum;
     private double _emptyVol;
+    private int _numOfBins;
+    private int _remBoxNum;
     private String binIdentifier;
     
     public Level3_Bin(int length, int width, int height) {
         this.length = length;
         this.width = width;
         this.height = height;
-        this._boxNum = 0;
+        this._maxBoxNum = 0;
         this.binIdentifier = length + "x" + width + "x" + height;
     }
     
@@ -49,20 +51,36 @@ public class Level3_Bin {
         return this.binIdentifier;
     }
     
-    public int getBoxNum(){
-        return this._boxNum;
+    public int getMaxBoxNum(){
+        return this._maxBoxNum;
     }
     
     public double getEmptyVol(){
         return this._emptyVol;
     }
     
-    public void setBoxNum(int boxNum){
-        _boxNum = boxNum;
+    public int getNumOfBin(){
+        return this._numOfBins;
+    }
+    
+    public int getRemBox(){
+        return this._remBoxNum;
+    }
+    
+    public void setMaxBoxNum(int boxNum){
+        _maxBoxNum = boxNum;
     }
     
     public void setEmptyVol(double emptyVol){
         _emptyVol =  emptyVol;
+    }
+    
+    public void setNumOfBin(int binNum){
+        _numOfBins = binNum;
+    }
+    
+    public void setRemBox(int remBox){
+        _remBoxNum = remBox;
     }
     
     @Override
