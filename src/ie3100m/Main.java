@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args) {
         try {
-            Level2_Box box = new Level2_Box(190, 190, 100, 0.65); //in mm and g
+            Level2_Box box = new Level2_Box(190, 186, 23, 0.65); //in mm and g
             Level3_Bin bin = new Level3_Bin(570, 400, 260);
             //Level3_Bin bin = new Level3_Bin(570, 400, 260);
             

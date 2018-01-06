@@ -43,10 +43,12 @@ public class Bin_Packing_Algorithm
         int n = sc.nextInt();
         System.out.println("Enter "+n+" items:");
         int []a = new int[n];
-        for(int i=0; i<n; i++)
+        for(int i=0; i<n; i++) {
             a[i] = sc.nextInt();
         System.out.println("Enter the bin size: ");
         int size = sc.nextInt();
         binPacking(a, size, n);
         sc.close();
+        }
     }
+}
