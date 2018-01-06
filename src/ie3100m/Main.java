@@ -20,6 +20,8 @@ public class Main {
         try {
             Level2_Box box = new Level2_Box(190, 186, 23, 0.65); //in mm and g
             Level3_Bin bin = new Level3_Bin(570, 400, 260);
+            int boxHeight = box.getHeight();
+            int binHeight = bin.getHeight();
             //Level3_Bin bin = new Level3_Bin(570, 400, 260);
             
             /*ArrayList<Level3_Bin> candidateBins = new ArrayList<>();
@@ -30,9 +32,14 @@ public class Main {
                 candidateBins.add(new Level3_Bin(390, 380, 380));
             }*/
             
+            
+            
             System.out.println("Upper bound: " + calcUpperBound(box, bin));
             Solver solver = new Solver(box, calcUpperBound(box, bin), bin);
-            solver.optimize();
+            int numBoxPerLvl = solver.optimize();
+            int numHeight = binHeight/boxHeight;
+            int totalBoxNum = numBoxPerLvl * numHeight;
+            double emptySpace = (bin.getVolume()) - (totalBoxNum * box.getVolume());
         } catch (IloException ex) {
             ex.printStackTrace();
         }
