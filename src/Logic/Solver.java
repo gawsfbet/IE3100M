@@ -41,7 +41,7 @@ public class Solver {
         this.binVolumes = bin.getVolume();
     }
     
-    public void optimize() throws IloException {
+    public int optimize() throws IloException {
         //variables
         IloIntVar[] P = cplex.boolVarArray(n);
         
@@ -113,8 +113,10 @@ public class Solver {
                     System.out.println(String.format("(%d, %d)", Math.round(cplex.getValue(x[i])), Math.round(cplex.getValue(y[i]))));
                 }
             }
+            return (int) Math.round(cplex.getObjValue());
         } else {
             System.out.println("Solution not found.");
+            return Integer.MAX_VALUE;
         }
     }
 }

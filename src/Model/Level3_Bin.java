@@ -13,11 +13,16 @@ public class Level3_Bin {
     private int length;
     private int width;
     private int height;
+    private int _boxNum;
+    private double _emptyVol;
+    private String binIdentifier;
     
     public Level3_Bin(int length, int width, int height) {
         this.length = length;
         this.width = width;
         this.height = height;
+        this._boxNum = 0;
+        this.binIdentifier = length + "x" + width + "x" + height;
     }
     
     public int getLength() {
@@ -38,6 +43,26 @@ public class Level3_Bin {
     
     public int getVolume() {
         return this.length * this.width * this.height;
+    }
+    
+    public String getBinIdentifier(){
+        return this.binIdentifier;
+    }
+    
+    public int getBoxNum(){
+        return this._boxNum;
+    }
+    
+    public double getEmptyVol(){
+        return this._emptyVol;
+    }
+    
+    public void setBoxNum(int boxNum){
+        _boxNum = boxNum;
+    }
+    
+    public void setEmptyVol(double emptyVol){
+        _emptyVol =  emptyVol;
     }
     
     @Override
