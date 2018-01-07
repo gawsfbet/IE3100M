@@ -14,6 +14,7 @@ public class Level3_Bin {
     private int width;
     private int height;
     private int _maxBoxNum;
+    private double _totalEmptyVol;
     private double _emptyVol;
     private int _numOfBins;
     private int _remBoxNum;
@@ -67,6 +68,10 @@ public class Level3_Bin {
         return this._remBoxNum;
     }
     
+    public double getTotalEmptyVol(){
+        return this._totalEmptyVol;
+    }
+    
     public void setMaxBoxNum(int boxNum){
         _maxBoxNum = boxNum;
     }
@@ -81,6 +86,10 @@ public class Level3_Bin {
     
     public void setRemBox(int remBox){
         _remBoxNum = remBox;
+    }
+    
+    public void setTotalEmptyVol(double totalEmptyVol){
+        _totalEmptyVol = totalEmptyVol;
     }
     
     @Override

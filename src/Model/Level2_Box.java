@@ -16,11 +16,14 @@ public class Level2_Box {
     
     private double weight;
     
+    private String boxIdentifier;
+    
     public Level2_Box(int length, int width, int height, double weight) {
         this.length = length;
         this.width = width;
         this.height = height;
         this.weight = weight;
+        this.boxIdentifier = length + "x" + width + "x" + height;
     }
     
     public int getLength() {
@@ -45,5 +48,9 @@ public class Level2_Box {
     
     public double getWeight() {
         return this.weight;
+    }
+    
+    public String getBoxIdentifier(){
+        return this.boxIdentifier;
     }
 }
