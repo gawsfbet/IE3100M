@@ -43,47 +43,71 @@ public class Main {
         int binChkr = finalBin.getNumOfBin();
         double totalVolChkr = finalBin.getTotalEmptyVol();
 
-        /*
-        1. chk the smallest empty vol. 
-        2. chk the least amt of req bins.
-        3. special: if amt of req bins == 1, finalBin must always have only 1 req bin, chk for smallest empty vol. 
-         */
-        for (int i = 1; i < candidateBins.size(); i++) {
+//        /*
+//        1. chk the smallest empty vol. 
+//        2. chk the least amt of req bins.
+//        3. special: if amt of req bins == 1, finalBin must always have only 1 req bin, chk for smallest empty vol. 
+//         */
+//        for (int i = 1; i < candidateBins.size(); i++) {
+//            binChkr = finalBin.getNumOfBin();
+//            totalVolChkr = finalBin.getTotalEmptyVol();
+//            //ensure scenario of 1 bin 1 box does not occur
+//            if (candidateBins.get(i).getNumOfBin() / numOrderedBox <= 1 / 2) {
+//                //chk for remainder boxes. No remainder boxes > have remainder boxes.
+//                if (finalBin.getRemBox() != 0 && candidateBins.get(i).getRemBox() == 0 /*&& candidateBins.get(i).getTotalEmptyVol() < finalBin.getTotalEmptyVol()*/) {
+//                    finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
+//                } else if (finalBin.getRemBox() == 0 && candidateBins.get(i).getRemBox() == 0) {
+//                    //chk for smallest total empty vol (sum of all bins). 
+//                    if (candidateBins.get(i).getTotalEmptyVol() < totalVolChkr) {
+//                        finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
+//                    } else if (candidateBins.get(i).getTotalEmptyVol() == totalVolChkr) {
+//                        //chk for least no. of bins used. 
+//                        if (candidateBins.get(i).getNumOfBin() < binChkr) {
+//                            finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
+//                        }
+//                    }
+//                } else if (finalBin.getRemBox() != 0 && candidateBins.get(i).getRemBox() != 0) {
+//                    //chk for smallest total empty vol (sum of all bins). 
+//                    if (candidateBins.get(i).getTotalEmptyVol() < totalVolChkr) {
+//                        finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
+//                    } else if (candidateBins.get(i).getTotalEmptyVol() == totalVolChkr) {
+//                        //chk for least no. of bins used. 
+//                        if (candidateBins.get(i).getNumOfBin() < binChkr) {
+//                            finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
+        
+        for (int i = 0; i < candidateBins.size(); i++) {
             binChkr = finalBin.getNumOfBin();
             totalVolChkr = finalBin.getTotalEmptyVol();
             //ensure scenario of 1 bin 1 box does not occur
             if (candidateBins.get(i).getNumOfBin() / numOrderedBox <= 1 / 2) {
-                //chk for remainder boxes. No remainder boxes > have remainder boxes.
-                if (finalBin.getRemBox() != 0 && candidateBins.get(i).getRemBox() == 0 /*&& candidateBins.get(i).getTotalEmptyVol() < finalBin.getTotalEmptyVol()*/) {
+                if (candidateBins.get(i).getTotalEmptyVol() < finalBin.getTotalEmptyVol()){
                     finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
-                } else if (finalBin.getRemBox() == 0 && candidateBins.get(i).getRemBox() == 0) {
-                    //chk for smallest total empty vol (sum of all bins). 
-                    if (candidateBins.get(i).getTotalEmptyVol() < totalVolChkr) {
+                } else if (candidateBins.get(i).getTotalEmptyVol() == finalBin.getTotalEmptyVol()) {
+                    if (candidateBins.get(i).getNumOfBin() < finalBin.getNumOfBin()){
                         finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
-                    } else if (candidateBins.get(i).getTotalEmptyVol() == totalVolChkr) {
-                        //chk for least no. of bins used. 
-                        if (candidateBins.get(i).getNumOfBin() < binChkr) {
+                    } else if (candidateBins.get(i).getNumOfBin() == finalBin.getNumOfBin()){
+                        if (candidateBins.get(i).getRemBox() == 0 && finalBin.getRemBox() != 0){
                             finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
-                        }
-                    }
-                } else if (finalBin.getRemBox() != 0 && candidateBins.get(i).getRemBox() != 0) {
-                    //chk for smallest total empty vol (sum of all bins). 
-                    if (candidateBins.get(i).getTotalEmptyVol() < totalVolChkr) {
-                        finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
-                    } else if (candidateBins.get(i).getTotalEmptyVol() == totalVolChkr) {
-                        //chk for least no. of bins used. 
-                        if (candidateBins.get(i).getNumOfBin() < binChkr) {
-                            finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
-
+                        } else if (candidateBins.get(i).getRemBox() != 0 && finalBin.getRemBox() != 0){
+                            /*chk remainder box here? */
                         }
                     }
                 }
             }
+            
         }
 
         
         int remainderBox = finalBin.getRemBox();
-        candidateBins.forEach((bin) -> {
+        ArrayList<Level3_Bin> candidateFinalBins = new ArrayList<>();
+        addBins(candidateFinalBins);
+        candidateFinalBins.forEach((bin) -> {
             if (bin.getMaxBoxNum() > remainderBox) {
                 bin.setNumOfBin(1);
                 bin.setEmptyVol(bin.getVolume() - (remainderBox * box.getVolume()));
@@ -100,13 +124,13 @@ public class Main {
                 }
             }
         }
-        
+
         printFinalBinStats(finalBin, box, numOrderedBox);
         printLastBinStats(lastBin, box, remainderBox);
 
     }
-    
-    private static void printLastBinStats(Level3_Bin bin, Level2_Box box, int remainderBox){
+
+    private static void printLastBinStats(Level3_Bin bin, Level2_Box box, int remainderBox) {
         System.out.println("Last Bin:");
         System.out.println("box type: " + box.getBoxIdentifier() + " remainder size: " + remainderBox);
         System.out.print("bin type " + bin.getBinIdentifier());
@@ -149,10 +173,22 @@ public class Main {
     //add bins to arraylist
     public static void addBins(ArrayList<Level3_Bin> candidateBins) {
         for (int i = 0; i < 1; i++) {
-            candidateBins.add(new Level3_Bin(570, 440, 190));
-            candidateBins.add(new Level3_Bin(440, 440, 190));
+            candidateBins.add(new Level3_Bin(190, 190, 100));
+            candidateBins.add(new Level3_Bin(210, 210, 210));
+            candidateBins.add(new Level3_Bin(370, 340, 140));
+            candidateBins.add(new Level3_Bin(370, 370, 250));
+            candidateBins.add(new Level3_Bin(390, 185, 100));
+            candidateBins.add(new Level3_Bin(390, 380, 100));
             candidateBins.add(new Level3_Bin(390, 380, 200));
             candidateBins.add(new Level3_Bin(390, 380, 380));
+            candidateBins.add(new Level3_Bin(440, 440, 190));
+            candidateBins.add(new Level3_Bin(570, 130, 160));
+            candidateBins.add(new Level3_Bin(570, 260, 160));
+            candidateBins.add(new Level3_Bin(570, 260, 240));
+            candidateBins.add(new Level3_Bin(570, 260, 320));
+            candidateBins.add(new Level3_Bin(570, 400, 260));
+            candidateBins.add(new Level3_Bin(600, 350, 190));
+
         }
     }
 
@@ -188,9 +224,15 @@ public class Main {
             bin.setRemBox(0);
             bin.setTotalEmptyVol(bin.getVolume() - (numOrderedBox * box.getVolume()));
         } else {
-            bin.setNumOfBin(numOrderedBox / bin.getMaxBoxNum());
-            bin.setRemBox(numOrderedBox % bin.getMaxBoxNum());
-            bin.setTotalEmptyVol(bin.getEmptyVol() * bin.getNumOfBin());
+            if (bin.getMaxBoxNum() == 0) {
+                bin.setNumOfBin(Integer.MAX_VALUE);
+                bin.setRemBox(numOrderedBox);
+                bin.setTotalEmptyVol(bin.getEmptyVol());
+            } else {
+                bin.setNumOfBin(numOrderedBox / bin.getMaxBoxNum());
+                bin.setRemBox(numOrderedBox % bin.getMaxBoxNum());
+                bin.setTotalEmptyVol(bin.getEmptyVol() * bin.getNumOfBin());
+            }
         }
     }
 
