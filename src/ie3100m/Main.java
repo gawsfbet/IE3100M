@@ -203,9 +203,9 @@ public class Main {
 
     //find maximum number of boxes that can be placed in the bin.
     public static void chkMaxBox(Level2_Box box, Level3_Bin bin) throws IloException {
-        System.out.println("Upper bound: " + calcUpperBound(box, bin));
+        //System.out.println("Upper bound: " + calcUpperBound(box, bin));
         Solver solver = new Solver(box, calcUpperBound(box, bin), bin);
-        int numBoxPerLvl = solver.optimize();
+        int numBoxPerLvl = solver.optimize(false);
         int numHeight = bin.getHeight() / box.getHeight();
         int totalBoxNum = numBoxPerLvl * numHeight;
         double emptyVol = (bin.getVolume()) - (totalBoxNum * box.getVolume());
@@ -239,5 +239,4 @@ public class Main {
     private static int calcUpperBound(Level2_Box box, Level3_Bin bin) {
         return bin.getBaseArea() / box.getBaseArea();
     }
-
 }

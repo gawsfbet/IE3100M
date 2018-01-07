@@ -41,7 +41,11 @@ public class Solver {
         this.binVolumes = bin.getVolume();
     }
     
-    public int optimize() throws IloException {
+    public int optimize(boolean output) throws IloException {
+        if (!output) {
+            cplex.setOut(null);
+        }
+        
         //variables
         IloIntVar[] P = cplex.boolVarArray(n);
         
@@ -103,14 +107,15 @@ public class Solver {
         }
         cplex.addLe(XsumWeight, 30);
         
-        System.out.println("Solving...");
         if (cplex.solve()) {
-            System.out.println("Free Space: " + (bin.getVolume() - box.getVolume() * cplex.getObjValue()));
-            System.out.println("Number of boxes: " + cplex.getObjValue());
-            
-            for (int i = 0; i < n; i++) {
-                if (cplex.getValue(P[i]) > 0) {
-                    System.out.println(String.format("(%d, %d)", Math.round(cplex.getValue(x[i])), Math.round(cplex.getValue(y[i]))));
+            if (output) {
+                System.out.println("Free Space: " + (bin.getVolume() - box.getVolume() * cplex.getObjValue()));
+                System.out.println("Number of boxes: " + cplex.getObjValue());
+
+                for (int i = 0; i < n; i++) {
+                    if (cplex.getValue(P[i]) > 0) {
+                        System.out.println(String.format("(%d, %d)", Math.round(cplex.getValue(x[i])), Math.round(cplex.getValue(y[i]))));
+                    }
                 }
             }
             return (int) Math.round(cplex.getObjValue());
