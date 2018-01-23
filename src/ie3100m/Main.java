@@ -156,28 +156,28 @@ public class Main {
         Solver solver = new Solver(box, calcUpperBound(box, bin), bin);
         int numBoxPerLayer = solver.optimize(false);
         int numLayers = bin.getHeight() / box.getHeight();
-        int totalBoxNum = numBoxPerLayer * numLayers;
-        int emptyVol = (bin.getVolume()) - (totalBoxNum * box.getVolume());
+        int totalBoxPerBin = numBoxPerLayer * numLayers;
+        int emptyVol = (bin.getVolume()) - (totalBoxPerBin * box.getVolume());
         
-        PackingConfig config = new PackingConfig(bin, totalBoxNum, emptyVol);
-        System.out.println("Number of boxes for bin type " + bin.toString() + ": " + totalBoxNum);
+        PackingConfig config = new PackingConfig(bin, totalBoxPerBin, emptyVol);
+        System.out.println("Number of boxes for bin type " + bin.toString() + ": " + totalBoxPerBin);
         System.out.println("Empty space for bin type " + bin.toString() + ": " + emptyVol);
         
-        if (order.getQuantity() < totalBoxNum) {
+        if (order.getQuantity() < totalBoxPerBin) { //one box can fit everything
             config.setEmptyVol(bin.getVolume() - (order.getQuantity() * box.getVolume()));
             config.setTotalBins(1);
             config.setRemainderBoxes(0);
             config.setTotalEmptyVol(bin.getVolume() - (order.getQuantity() * box.getVolume()));
+            
+            configs.add(config);
+        } else if (totalBoxPerBin == 0) { //level 2 item cannot fit in the bin
+            config.setTotalBins(Integer.MAX_VALUE);
+            config.setRemainderBoxes(numOrderedBox);
+            config.setTotalEmptyVol(bin.getEmptyVol());
         } else {
-            if (bin.getMaxBoxNum() == 0) {
-                bin.setNumOfBin(Integer.MAX_VALUE);
-                bin.setRemBox(numOrderedBox);
-                bin.setTotalEmptyVol(bin.getEmptyVol());
-            } else {
-                bin.setNumOfBin(numOrderedBox / bin.getMaxBoxNum());
-                bin.setRemBox(numOrderedBox % bin.getMaxBoxNum());
-                bin.setTotalEmptyVol(bin.getEmptyVol() * bin.getNumOfBin());
-            }
+            config.setTotalBins(order.getQuantity() / totalBoxPerBin);
+            config.setRemainderBoxes(numOrderedBox % totalBoxPerBin);
+            config.setTotalEmptyVol(emptyVol * totalBoxPerBin);
         }
     }
 
