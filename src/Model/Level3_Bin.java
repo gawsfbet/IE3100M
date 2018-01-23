@@ -5,6 +5,8 @@
  */
 package Model;
 
+import java.text.DecimalFormat;
+
 /**
  *
  * @author Kevin-Notebook
@@ -18,14 +20,21 @@ public class Level3_Bin {
     private double _emptyVol;
     private int _numOfBins;
     private int _remBoxNum;
-    private String binIdentifier;
+    private String name;
     
     public Level3_Bin(int length, int width, int height) {
+        this.name = "";
         this.length = length;
         this.width = width;
         this.height = height;
         this._maxBoxNum = 0;
-        this.binIdentifier = length + "x" + width + "x" + height;
+    }
+    
+    public Level3_Bin(String name, int length, int width, int height) {
+        this.name = name;
+        this.length = length;
+        this.width = width;
+        this.height = height;
     }
     
     public int getLength() {
@@ -48,9 +57,25 @@ public class Level3_Bin {
         return this.length * this.width * this.height;
     }
     
-    public String getBinIdentifier(){
-        return this.binIdentifier;
+    public String getName() {
+        return this.name;
     }
+    
+    public String getFullName() {
+        return String.format("(DW) CARTON %s", this.name);
+    }
+    
+    public String getDimensions() {
+        DecimalFormat decFormat = new DecimalFormat("#.#");
+        return String.format("%s X %s X %s cm", 
+                decFormat.format((float) this.length / 10), 
+                decFormat.format((float) this.width / 10), 
+                decFormat.format((float) this.height / 10));
+    }
+    
+    /*public String getBinIdentifier(){
+        return this.binIdentifier;
+    }*/
     
     public int getMaxBoxNum(){
         return this._maxBoxNum;
@@ -94,6 +119,6 @@ public class Level3_Bin {
     
     @Override
     public String toString() {
-        return length + " X " + width + " X " + height;
+        return String.format("%s: %s", getFullName(), getDimensions());
     }
 }

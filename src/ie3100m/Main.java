@@ -8,6 +8,7 @@ package ie3100m;
 import Logic.Solver;
 import Model.Level2_Box;
 import Model.Level3_Bin;
+import Utils.FileUtils;
 import ilog.concert.IloException;
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ public class Main {
         //int binHeight = bin.getHeight();
         ArrayList<Level3_Bin> candidateBins = new ArrayList<>();
         addBins(candidateBins);
-
+        
         candidateBins.forEach((bin) -> {
             try {
                 chkMaxBox(box, bin);
@@ -133,7 +134,7 @@ public class Main {
     private static void printLastBinStats(Level3_Bin bin, Level2_Box box, int remainderBox) {
         System.out.println("Last Bin:");
         System.out.println("box type: " + box.getBoxIdentifier() + " remainder size: " + remainderBox);
-        System.out.print("bin type " + bin.getBinIdentifier());
+        System.out.print("bin type " + bin.toString());
         System.out.print("-> boxes per bin: " + bin.getMaxBoxNum());
         System.out.print(", bins required: " + bin.getNumOfBin());
         System.out.print(", total empty vol: " + bin.getTotalEmptyVol());
@@ -145,7 +146,7 @@ public class Main {
     private static void printFinalBinStats(Level3_Bin bin, Level2_Box box, int numOrderedBox) {
         System.out.println("Final Main Bin:");
         System.out.println("box type: " + box.getBoxIdentifier() + " order size: " + numOrderedBox);
-        System.out.print("bin type " + bin.getBinIdentifier());
+        System.out.print("bin type " + bin.toString());
         System.out.print("-> boxes per bin: " + bin.getMaxBoxNum());
         System.out.print(", bins required: " + bin.getNumOfBin());
         System.out.print(", total empty vol: " + bin.getTotalEmptyVol());
@@ -159,7 +160,7 @@ public class Main {
     public static void printAllBinStats(ArrayList<Level3_Bin> candidateBins, Level2_Box box, int numOrderedBox) {
         System.out.println("box type: " + box.getBoxIdentifier() + " order size: " + numOrderedBox);
         for (Level3_Bin bin : candidateBins) {
-            System.out.print("bin type " + bin.getBinIdentifier());
+            System.out.print("bin type " + bin.toString());
             System.out.print("-> boxes per bin: " + bin.getMaxBoxNum());
             System.out.print(", bins required: " + bin.getNumOfBin());
             System.out.print(", total empty vol: " + bin.getTotalEmptyVol());
@@ -172,7 +173,8 @@ public class Main {
 
     //add bins to arraylist
     public static void addBins(ArrayList<Level3_Bin> candidateBins) {
-        for (int i = 0; i < 1; i++) {
+        candidateBins.addAll(FileUtils.getBinList());
+        /*for (int i = 0; i < 1; i++) {
             candidateBins.add(new Level3_Bin(190, 190, 100));
             candidateBins.add(new Level3_Bin(210, 210, 210));
             candidateBins.add(new Level3_Bin(370, 340, 140));
@@ -188,8 +190,9 @@ public class Main {
             candidateBins.add(new Level3_Bin(570, 260, 320));
             candidateBins.add(new Level3_Bin(570, 400, 260));
             candidateBins.add(new Level3_Bin(600, 350, 190));
+            
 
-        }
+        }*/
     }
 
     //set bin as final bin
@@ -211,8 +214,8 @@ public class Main {
         double emptyVol = (bin.getVolume()) - (totalBoxNum * box.getVolume());
         bin.setMaxBoxNum(totalBoxNum);
         bin.setEmptyVol(emptyVol);
-        System.out.println("Number of boxes for bin type " + bin.getBinIdentifier() + ": " + totalBoxNum);
-        System.out.println("Empty space for bin type " + bin.getBinIdentifier() + ": " + emptyVol);
+        System.out.println("Number of boxes for bin type " + bin.toString() + ": " + totalBoxNum);
+        System.out.println("Empty space for bin type " + bin.toString() + ": " + emptyVol);
     }
 
     //find required number of bins for the requested number of boxes.
