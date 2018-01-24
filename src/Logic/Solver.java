@@ -22,7 +22,7 @@ public class Solver {
     private IloCplex cplex;
     private int n; //upper bound of level 2 box
     
-    private static final double M = 100000; //large integer (500M)
+    private static final double M = 100000; //large integer (100K)
     
     private Level2_Box box;
     private Level3_Bin bin;
