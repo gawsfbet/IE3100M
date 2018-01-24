@@ -22,6 +22,7 @@ import java.util.Collections;
  */
 public class Main {
 
+    public static final double MAX_WEIGHT = 30;
     public static final int numOrderedBox = 1000;
     public static ArrayList<BinStats> binStats = new ArrayList<>();
     public static ArrayList<PackingConfig> configs = new ArrayList<>();
@@ -50,64 +51,14 @@ public class Main {
         Collections.sort(configs);
         
         for (PackingConfig config : configs) {
-            System.out.println(config);
-            System.out.println();
-        }
-
-        /*printAllBinStats(binList, order.getBox(), numOrderedBox);
-
-        //Bin Comparison this shit is damn messy.
-        Level3_Bin finalBin = binList.get(0);
-        int binChkr = finalBin.getNumOfBin();
-        double totalVolChkr = finalBin.getTotalEmptyVol();
-        
-        for (int i = 0; i < binList.size(); i++) {
-            binChkr = finalBin.getNumOfBin();
-            totalVolChkr = finalBin.getTotalEmptyVol();
-            //ensure scenario of 1 bin 1 box does not occur
-            if (binList.get(i).getNumOfBin() / numOrderedBox <= 1 / 2) {
-                if (binList.get(i).getTotalEmptyVol() < finalBin.getTotalEmptyVol()){
-                    finalBin = setFinalBin(binList, finalBin, binChkr, totalVolChkr, i);
-                } else if (binList.get(i).getTotalEmptyVol() == finalBin.getTotalEmptyVol()) {
-                    if (binList.get(i).getNumOfBin() < finalBin.getNumOfBin()){
-                        finalBin = setFinalBin(binList, finalBin, binChkr, totalVolChkr, i);
-                    } else if (binList.get(i).getNumOfBin() == finalBin.getNumOfBin()){
-                        if (binList.get(i).getRemBox() == 0 && finalBin.getRemBox() != 0){
-                            finalBin = setFinalBin(binList, finalBin, binChkr, totalVolChkr, i);
-                        } else if (binList.get(i).getRemBox() != 0 && finalBin.getRemBox() != 0){
-                            //chk remainder box here?
-                        }
-                    }
-                }
+            if (config.getTotalBoxesPerBin() != 1) {
+                System.out.println("Chosen configuration:\n");
+                System.out.println(config);
+                break;
             }
-            
         }
 
         
-        int remainderBox = finalBin.getRemBox();
-        ArrayList<Level3_Bin> candidateFinalBins = new ArrayList<>();
-        addBins(candidateFinalBins);
-        candidateFinalBins.forEach((bin) -> {
-            if (bin.getMaxBoxNum() > remainderBox) {
-                bin.setNumOfBin(1);
-                bin.setEmptyVolPerBox(bin.getVolume() - (remainderBox * order.getBox().getVolume()));
-            } else {
-                bin.setNumOfBin(0);
-            }
-        });
-
-        Level3_Bin lastBin = binList.get(0);
-        for (int i = 0; i < binList.size(); i++) {
-            if (binList.get(i).getNumOfBin() == 1) {
-                if (binList.get(i).getEmptyVol() < lastBin.getEmptyVol()) {
-                    lastBin = binList.get(i);
-                }
-            }
-        }
-
-        printFinalBinStats(finalBin, order.getBox(), numOrderedBox);
-        printLastBinStats(lastBin, order.getBox(), remainderBox);*/
-
     }
 
     private static void printLastBinStats(Level3_Bin bin, Level2_Box box, int remainderBox) {
@@ -164,10 +115,17 @@ public class Main {
         return finalBin;
     }
     
+    //find maximum number of boxes that can be placed in the bin, with cplex API.
     private static BinStats getStats(Level2_Box box, Level3_Bin bin) throws IloException {
         Solver solver = new Solver(box, calcUpperBound(box, bin), bin);
         int quantityPerLayer = solver.optimize(false);
+        
         int totalQuantity = quantityPerLayer * (bin.getHeight() / box.getHeight());
+        
+        if (totalQuantity * box.getWeight() > MAX_WEIGHT) {
+            totalQuantity = (int) (MAX_WEIGHT / box.getWeight());
+        }
+        
         int emptyVolume = (bin.getVolume()) - (totalQuantity * box.getVolume());
         
         /*System.out.println("Number of boxes for bin type " + bin.toString() + ": " + totalQuantity);
@@ -176,8 +134,7 @@ public class Main {
         return new BinStats(bin, quantityPerLayer, totalQuantity, emptyVolume);
     }
 
-    //find maximum number of boxes that can be placed in the bin, with cplex API.
-    //after which, find how many bins needed for the given order
+    //find how many bins needed for the given order
     private static void determineConfig(Order order, BinStats binStats) {
         Level2_Box box = order.getBox();
         

@@ -37,6 +37,10 @@ public class PackingConfig implements Comparable<PackingConfig> {
         return remainderBoxes == 0 ? this.totalBins : this.totalBins + 1;
     }
     
+    public int getTotalBoxesPerBin() {
+        return this.totalBoxesPerBin;
+    }
+    
     public int getRemainderBoxes() {
         return this.remainderBoxes;
     }
