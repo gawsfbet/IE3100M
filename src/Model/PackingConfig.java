@@ -10,52 +10,51 @@ package Model;
  * @author Kevin-Notebook
  */
 public class PackingConfig implements Comparable<PackingConfig> {
-    private Level3_Bin mainBin;
+    private final Level3_Bin mainBin;
     private Level3_Bin lastBin;
+    
     private int totalEmptyVol;
-    private int emptyVol;
-    private int totalBoxes;
+    private final int emptyVolPerBin;
+    private final int totalBoxesPerBin;
     private int totalBins;
-    private int remainderBoxes;
+    private final int remainderBoxes;
     
-    public PackingConfig(Level3_Bin mainBin) {
+    public PackingConfig (Level3_Bin mainBin, int totalBoxesPerBin, int totalBins, int emptyVolPerBin, int remainderBoxes) {
         this.mainBin = mainBin;
         
-        this.emptyVol = mainBin.getVolume();
-        this.totalBoxes = 0;
-        this.remainderBoxes = 0;
+        this.totalBoxesPerBin = totalBoxesPerBin;
+        this.totalBins = totalBins;
+        this.remainderBoxes = remainderBoxes;
+        this.emptyVolPerBin = emptyVolPerBin;
+        this.totalEmptyVol = totalBins * emptyVolPerBin;
     }
     
-    public PackingConfig(Level3_Bin mainBin, int totalBins, int emptyVol) {
-        this.mainBin = mainBin;
-        
-        this.emptyVol = emptyVol;
-        this.totalBoxes = totalBins;
-        this.remainderBoxes = 0;
+    public int getTotalBins() {
+        return this.totalBins;
     }
     
-    public void setMainBin(Level3_Bin mainBin) {
-        this.mainBin = mainBin;
+    public int getTotalBinsInclRemainder() {
+        return remainderBoxes == 0 ? this.totalBins : this.totalBins + 1;
+    }
+    
+    public int getRemainderBoxes() {
+        return this.remainderBoxes;
+    }
+    
+    public Level3_Bin getLastBin() {
+        return this.lastBin;
+    }
+    
+    public int getTotalEmptyVol() {
+        return this.totalEmptyVol;
     }
     
     public void setLastBin(Level3_Bin lastBin) {
         this.lastBin = lastBin;
     }
     
-    public void setTotalBoxes(int totalBoxes) {
-        this.totalBoxes = totalBoxes;
-    }
-    
     public void setTotalBins(int totalBins) {
         this.totalBins = totalBins;
-    }
-    
-    public void setRemainderBoxes(int remainderBoxes) {
-        this.remainderBoxes = remainderBoxes;
-    }
-    
-    public void setEmptyVol(int emptyVol) {
-        this.emptyVol = emptyVol;
     }
     
     public void setTotalEmptyVol(int totalEmptyVol) {
@@ -64,7 +63,20 @@ public class PackingConfig implements Comparable<PackingConfig> {
     
     @Override
     public int compareTo(PackingConfig other) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (this.getTotalBinsInclRemainder() == other.getTotalBinsInclRemainder()) {
+            return this.getTotalEmptyVol() - other.getTotalEmptyVol();
+        } else {
+            return this.getTotalBinsInclRemainder() - other.getTotalBinsInclRemainder();
+        }
+    }
+    
+    @Override
+    public String toString() {
+        String info = "Bin type: " + this.mainBin.toString() 
+                + "\nBoxes per Bin: " + totalBoxesPerBin
+                + "\nBins Needed: " + totalBins;
+        
+        return info + (lastBin == null ? "\nLast Bin not needed" : "\n" + lastBin.toString() + " to contain remaining " + remainderBoxes + " boxes");
     }
     
 }

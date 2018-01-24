@@ -6,6 +6,7 @@
 package ie3100m;
 
 import Logic.Solver;
+import Model.BinStats;
 import Model.Level2_Box;
 import Model.Level3_Bin;
 import Model.Order;
@@ -13,6 +14,7 @@ import Model.PackingConfig;
 import Utils.FileUtils;
 import ilog.concert.IloException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -21,46 +23,59 @@ import java.util.ArrayList;
 public class Main {
 
     public static final int numOrderedBox = 1000;
-    public static ArrayList<PackingConfig> configs;
+    public static ArrayList<BinStats> binStats = new ArrayList<>();
+    public static ArrayList<PackingConfig> configs = new ArrayList<>();
 
     public static void main(String[] args) {
-        Order order = new Order(new Level2_Box(190, 186, 23, 0.65), numOrderedBox); //in mm and g
+        Level2_Box box = new Level2_Box(190, 186, 23, 0.65);
+        Order order = new Order(box, numOrderedBox); //in mm and g
         //Level2_Box box = new Level2_Box(190, 186, 23, 0.65); //in mm and g  
         //Level3_Bin bin = new Level3_Bin(570, 400, 260);
         //int binHeight = bin.getHeight();
-        ArrayList<Level3_Bin> candidateBins = new ArrayList<>();
-        addBins(candidateBins);
+        ArrayList<Level3_Bin> binList = new ArrayList<>();
+        addBins(binList);
         
-        candidateBins.forEach((bin) -> {
+        binList.forEach((bin) -> {
             try {
-                chkMaxBox(order, bin);
+                binStats.add(getStats(box, bin));
             } catch (IloException ex) {
                 ex.printStackTrace();
             }
         });
+        
+        binStats.forEach((binStat) -> {
+            determineConfig(order, binStat);
+        });
+        
+        Collections.sort(configs);
+        
+        for (PackingConfig config : configs) {
+            System.out.println(config);
+            System.out.println();
+        }
 
-        printAllBinStats(candidateBins, order.getBox(), numOrderedBox);
+        /*printAllBinStats(binList, order.getBox(), numOrderedBox);
 
         //Bin Comparison this shit is damn messy.
-        Level3_Bin finalBin = candidateBins.get(0);
+        Level3_Bin finalBin = binList.get(0);
         int binChkr = finalBin.getNumOfBin();
         double totalVolChkr = finalBin.getTotalEmptyVol();
         
-        for (int i = 0; i < candidateBins.size(); i++) {
+        for (int i = 0; i < binList.size(); i++) {
             binChkr = finalBin.getNumOfBin();
             totalVolChkr = finalBin.getTotalEmptyVol();
             //ensure scenario of 1 bin 1 box does not occur
-            if (candidateBins.get(i).getNumOfBin() / numOrderedBox <= 1 / 2) {
-                if (candidateBins.get(i).getTotalEmptyVol() < finalBin.getTotalEmptyVol()){
-                    finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
-                } else if (candidateBins.get(i).getTotalEmptyVol() == finalBin.getTotalEmptyVol()) {
-                    if (candidateBins.get(i).getNumOfBin() < finalBin.getNumOfBin()){
-                        finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
-                    } else if (candidateBins.get(i).getNumOfBin() == finalBin.getNumOfBin()){
-                        if (candidateBins.get(i).getRemBox() == 0 && finalBin.getRemBox() != 0){
-                            finalBin = setFinalBin(candidateBins, finalBin, binChkr, totalVolChkr, i);
-                        } else if (candidateBins.get(i).getRemBox() != 0 && finalBin.getRemBox() != 0){
-                            /*chk remainder box here? */
+            if (binList.get(i).getNumOfBin() / numOrderedBox <= 1 / 2) {
+                if (binList.get(i).getTotalEmptyVol() < finalBin.getTotalEmptyVol()){
+                    finalBin = setFinalBin(binList, finalBin, binChkr, totalVolChkr, i);
+                } else if (binList.get(i).getTotalEmptyVol() == finalBin.getTotalEmptyVol()) {
+                    if (binList.get(i).getNumOfBin() < finalBin.getNumOfBin()){
+                        finalBin = setFinalBin(binList, finalBin, binChkr, totalVolChkr, i);
+                    } else if (binList.get(i).getNumOfBin() == finalBin.getNumOfBin()){
+                        if (binList.get(i).getRemBox() == 0 && finalBin.getRemBox() != 0){
+                            finalBin = setFinalBin(binList, finalBin, binChkr, totalVolChkr, i);
+                        } else if (binList.get(i).getRemBox() != 0 && finalBin.getRemBox() != 0){
+                            //chk remainder box here?
                         }
                     }
                 }
@@ -75,23 +90,23 @@ public class Main {
         candidateFinalBins.forEach((bin) -> {
             if (bin.getMaxBoxNum() > remainderBox) {
                 bin.setNumOfBin(1);
-                bin.setEmptyVol(bin.getVolume() - (remainderBox * order.getBox().getVolume()));
+                bin.setEmptyVolPerBox(bin.getVolume() - (remainderBox * order.getBox().getVolume()));
             } else {
                 bin.setNumOfBin(0);
             }
         });
 
-        Level3_Bin lastBin = candidateBins.get(0);
-        for (int i = 0; i < candidateBins.size(); i++) {
-            if (candidateBins.get(i).getNumOfBin() == 1) {
-                if (candidateBins.get(i).getEmptyVol() < lastBin.getEmptyVol()) {
-                    lastBin = candidateBins.get(i);
+        Level3_Bin lastBin = binList.get(0);
+        for (int i = 0; i < binList.size(); i++) {
+            if (binList.get(i).getNumOfBin() == 1) {
+                if (binList.get(i).getEmptyVol() < lastBin.getEmptyVol()) {
+                    lastBin = binList.get(i);
                 }
             }
         }
 
         printFinalBinStats(finalBin, order.getBox(), numOrderedBox);
-        printLastBinStats(lastBin, order.getBox(), remainderBox);
+        printLastBinStats(lastBin, order.getBox(), remainderBox);*/
 
     }
 
@@ -148,37 +163,71 @@ public class Main {
 //        System.out.println("finalBin changed " + finalBin.getBinIdentifier());
         return finalBin;
     }
+    
+    private static BinStats getStats(Level2_Box box, Level3_Bin bin) throws IloException {
+        Solver solver = new Solver(box, calcUpperBound(box, bin), bin);
+        int quantityPerLayer = solver.optimize(false);
+        int totalQuantity = quantityPerLayer * (bin.getHeight() / box.getHeight());
+        int emptyVolume = (bin.getVolume()) - (totalQuantity * box.getVolume());
+        
+        /*System.out.println("Number of boxes for bin type " + bin.toString() + ": " + totalQuantity);
+        System.out.println("Empty space for bin type " + bin.toString() + ": " + emptyVolume);*/
+        
+        return new BinStats(bin, quantityPerLayer, totalQuantity, emptyVolume);
+    }
 
     //find maximum number of boxes that can be placed in the bin, with cplex API.
     //after which, find how many bins needed for the given order
-    public static void chkMaxBox(Order order, Level3_Bin bin) throws IloException {
+    private static void determineConfig(Order order, BinStats binStats) {
         Level2_Box box = order.getBox();
-        Solver solver = new Solver(box, calcUpperBound(box, bin), bin);
-        int numBoxPerLayer = solver.optimize(false);
-        int numLayers = bin.getHeight() / box.getHeight();
-        int totalBoxPerBin = numBoxPerLayer * numLayers;
-        int emptyVol = (bin.getVolume()) - (totalBoxPerBin * box.getVolume());
         
-        PackingConfig config = new PackingConfig(bin, totalBoxPerBin, emptyVol);
-        System.out.println("Number of boxes for bin type " + bin.toString() + ": " + totalBoxPerBin);
-        System.out.println("Empty space for bin type " + bin.toString() + ": " + emptyVol);
+        PackingConfig config;
         
-        if (order.getQuantity() < totalBoxPerBin) { //one box can fit everything
-            config.setEmptyVol(bin.getVolume() - (order.getQuantity() * box.getVolume()));
-            config.setTotalBins(1);
-            config.setRemainderBoxes(0);
-            config.setTotalEmptyVol(bin.getVolume() - (order.getQuantity() * box.getVolume()));
+        if (order.getQuantity() < binStats.getTotalQuantity()) { //one box can fit everything
+            int emptyVolPerBin = binStats.getBin().getVolume() - (order.getQuantity() * box.getVolume());
+            config = new PackingConfig(binStats.getBin(), 
+                    order.getQuantity(), 
+                    1, 
+                    emptyVolPerBin, 
+                    0);
             
             configs.add(config);
-        } else if (totalBoxPerBin == 0) { //level 2 item cannot fit in the bin
-            config.setTotalBins(Integer.MAX_VALUE);
-            config.setRemainderBoxes(numOrderedBox);
-            config.setTotalEmptyVol(bin.getEmptyVol());
+        } else if (binStats.getTotalQuantity() == 0) { //level 2 item cannot fit in the bin
+            //do nothing
         } else {
-            config.setTotalBins(order.getQuantity() / totalBoxPerBin);
-            config.setRemainderBoxes(numOrderedBox % totalBoxPerBin);
-            config.setTotalEmptyVol(emptyVol * totalBoxPerBin);
+            int remainingBoxes = order.getQuantity() % binStats.getTotalQuantity();
+            
+            config = new PackingConfig(binStats.getBin(), 
+                    binStats.getTotalQuantity(), 
+                    order.getQuantity() / binStats.getTotalQuantity(), 
+                    binStats.getEmptyVolume(), 
+                    remainingBoxes);
+            
+            if (config.getRemainderBoxes() != 0) {
+                config.setLastBin(determineRemainderBin(box, config));
+                config.setTotalEmptyVol(config.getTotalEmptyVol() + (config.getLastBin().getVolume() - box.getVolume() * config.getRemainderBoxes()));
+                
+            }
+            
+            configs.add(config);
         }
+    }
+    
+    private static Level3_Bin determineRemainderBin(Level2_Box box, PackingConfig config) {
+        Level3_Bin lastBin = null;
+        int emptyVol, minEmptyVol = Integer.MAX_VALUE;
+        
+        for (BinStats binStat : binStats) {
+            if (binStat.getTotalQuantity() >= config.getRemainderBoxes()) { //if the bin can contain all the remainder boxes
+                emptyVol = binStat.getBin().getVolume() - box.getVolume() * config.getRemainderBoxes();
+                if (emptyVol < minEmptyVol) {
+                    lastBin = binStat.getBin();
+                    minEmptyVol = emptyVol;
+                }
+            }
+        }
+        
+        return lastBin;
     }
 
     private static int calcUpperBound(Level2_Box box, Level3_Bin bin) {
