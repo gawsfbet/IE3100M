@@ -51,11 +51,9 @@ public class Main {
         Collections.sort(configs);
         
         for (PackingConfig config : configs) {
-            if (config.getTotalBoxesPerBin() != 1) {
-                System.out.println("Chosen configuration:\n");
-                System.out.println(config);
-                break;
-            }
+            System.out.println(config);
+            System.out.println(config.getTotalEmptyVol());
+            System.out.println();
         }
 
         

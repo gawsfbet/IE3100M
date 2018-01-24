@@ -13,7 +13,7 @@ public class PackingConfig implements Comparable<PackingConfig> {
     private final Level3_Bin mainBin;
     private Level3_Bin lastBin;
     
-    private int totalEmptyVol;
+    private long totalEmptyVol;
     private final int emptyVolPerBin;
     private final int totalBoxesPerBin;
     private int totalBins;
@@ -26,7 +26,7 @@ public class PackingConfig implements Comparable<PackingConfig> {
         this.totalBins = totalBins;
         this.remainderBoxes = remainderBoxes;
         this.emptyVolPerBin = emptyVolPerBin;
-        this.totalEmptyVol = totalBins * emptyVolPerBin;
+        this.totalEmptyVol = (long) totalBins * emptyVolPerBin;
     }
     
     public int getTotalBins() {
@@ -49,7 +49,7 @@ public class PackingConfig implements Comparable<PackingConfig> {
         return this.lastBin;
     }
     
-    public int getTotalEmptyVol() {
+    public long getTotalEmptyVol() {
         return this.totalEmptyVol;
     }
     
@@ -61,14 +61,14 @@ public class PackingConfig implements Comparable<PackingConfig> {
         this.totalBins = totalBins;
     }
     
-    public void setTotalEmptyVol(int totalEmptyVol) {
+    public void setTotalEmptyVol(long totalEmptyVol) {
         this.totalEmptyVol = totalEmptyVol;
     }
     
     @Override
     public int compareTo(PackingConfig other) {
         if (this.getTotalBinsInclRemainder() == other.getTotalBinsInclRemainder()) {
-            return this.getTotalEmptyVol() - other.getTotalEmptyVol();
+            return this.getTotalEmptyVol() <= other.getTotalEmptyVol() ? -1 : 1;
         } else {
             return this.getTotalBinsInclRemainder() - other.getTotalBinsInclRemainder();
         }
