@@ -6,11 +6,11 @@
 package ie3100m;
 
 import Logic.Solver;
-import Model.BinStats;
+import Model.Stats.BinStats;
 import Model.Product.Level2_Box;
 import Model.Product.Level3_Bin;
 import Model.Order;
-import Model.PackingConfig;
+import Model.Stats.PackingConfig;
 import Utils.FileUtils;
 import ilog.concert.IloException;
 import java.util.ArrayList;
