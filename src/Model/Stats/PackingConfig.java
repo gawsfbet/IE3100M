@@ -8,15 +8,15 @@ package Model.Stats;
 import Model.Product.Level3_Bin;
 
 /**
- *
- * @author Kevin-Notebook
+ * Represents a packing configuration.
+ * Contains the total number of (main) bins to use, as well as the bin to use for the remaining boxes, as well as total free volume
  */
 public class PackingConfig implements Comparable<PackingConfig> {
     private final Level3_Bin mainBin;
     private Level3_Bin lastBin;
     
     private long totalEmptyVol;
-    private final int emptyVolPerBin;
+    private final int emptyVolPerBin; //might not need
     private final int totalBoxesPerBin;
     private int totalBins;
     private final int remainderBoxes;
@@ -67,6 +67,11 @@ public class PackingConfig implements Comparable<PackingConfig> {
         this.totalEmptyVol = totalEmptyVol;
     }
     
+    /**
+     * Modify this method if another attribute is to be minimised
+     * @param other
+     * @return 
+     */
     @Override
     public int compareTo(PackingConfig other) {
         if (this.getTotalBinsInclRemainder() == other.getTotalBinsInclRemainder()) {

@@ -8,8 +8,7 @@ package Model.Stats;
 import Model.Product.Level3_Bin;
 
 /**
- *
- * @author Kevin-Notebook
+ * The maximum amount of boxes that can be packed into the bin, and the free space remaining.
  */
 public class BinStats {
     private final Level3_Bin bin;
