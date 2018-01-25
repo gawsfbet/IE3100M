@@ -5,6 +5,8 @@
  */
 package Model;
 
+import Model.Product.Level2_Box;
+
 /**
  *
  * @author Kevin-Notebook

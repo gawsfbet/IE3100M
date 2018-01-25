@@ -5,6 +5,8 @@
  */
 package Model;
 
+import Model.Product.Level3_Bin;
+
 /**
  *
  * @author Kevin-Notebook

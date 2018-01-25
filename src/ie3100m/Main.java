@@ -7,8 +7,8 @@ package ie3100m;
 
 import Logic.Solver;
 import Model.BinStats;
-import Model.Level2_Box;
-import Model.Level3_Bin;
+import Model.Product.Level2_Box;
+import Model.Product.Level3_Bin;
 import Model.Order;
 import Model.PackingConfig;
 import Utils.FileUtils;

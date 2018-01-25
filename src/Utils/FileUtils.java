@@ -5,7 +5,7 @@
  */
 package Utils;
 
-import Model.Level3_Bin;
+import Model.Product.Level3_Bin;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

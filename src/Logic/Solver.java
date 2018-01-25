@@ -7,8 +7,8 @@ package Logic;
 
 //testing this to push and learn how ot branch
 
-import Model.Level2_Box;
-import Model.Level3_Bin;
+import Model.Product.Level2_Box;
+import Model.Product.Level3_Bin;
 
 import ilog.concert.*; //model
 import ilog.cplex.*; //algo
