@@ -36,15 +36,13 @@ public class Main {
         //Level2_Box box = new Level2_Box(190, 186, 23, 0.65); //in mm and g  
         //Level3_Bin bin = new Level3_Bin(570, 400, 260);
         //int binHeight = bin.getHeight();
-        ArrayList<Level3_Bin> binList = new ArrayList<>();
-        ArrayList<BinStats> allBinStats = new ArrayList<>();
-        ArrayList<PackingConfig> configs = new ArrayList<>();
+        ArrayList<Level3_Bin> binList;
+        ArrayList<BinStats> allBinStats;
+        ArrayList<PackingConfig> configs;
         
-        getBinTypesFromFile(binList);
-        
-        allBinStats.addAll(calculateStatsForAllBins(box, binList));
-        
-        configs.addAll(determineAllConfigs(order, allBinStats));
+        binList = FileUtils.getBinTypesFromFile();
+        allBinStats = calculateStatsForAllBins(box, binList);
+        configs = determineAllConfigs(order, allBinStats);
         
         PackingConfig bestConfig = determineBestConfig(configs);
         
@@ -55,11 +53,6 @@ public class Main {
             System.out.println(bestConfig);
         }
         
-    }
-
-    //add bins to arraylist
-    public static void getBinTypesFromFile(ArrayList<Level3_Bin> candidateBins) {
-        candidateBins.addAll(FileUtils.getBinTypesFromFile());
     }
     
     private static ArrayList<BinStats> calculateStatsForAllBins(Level2_Box box, ArrayList<Level3_Bin> binList) {
