@@ -192,6 +192,7 @@ public class Main {
      * @return the most desired packing configuration
      */
     private static PackingConfig determineBestConfig(ArrayList<PackingConfig> packingConfigs) {
+        //might use a PQ for this instead
         Collections.sort(packingConfigs);
         
         for (PackingConfig config : packingConfigs) {
