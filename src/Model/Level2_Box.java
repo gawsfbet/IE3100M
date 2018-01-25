@@ -10,20 +10,26 @@ package Model;
  * @author Kevin-Notebook
  */
 public class Level2_Box {
-    private int length;
-    private int width;
-    private int height;
-    
-    private double weight;
-    
-    private String boxIdentifier;
+    private final int length;
+    private final int width;
+    private final int height;
+    private final double weight;
+    private final String name;
     
     public Level2_Box(int length, int width, int height, double weight) {
         this.length = length;
         this.width = width;
         this.height = height;
         this.weight = weight;
-        this.boxIdentifier = length + "x" + width + "x" + height;
+        this.name = "";
+    }
+    
+    public Level2_Box(int length, int width, int height, double weight, String name) {
+        this.length = length;
+        this.width = width;
+        this.height = height;
+        this.weight = weight;
+        this.name = name;
     }
     
     public int getLength() {
@@ -50,7 +56,16 @@ public class Level2_Box {
         return this.weight;
     }
     
-    public String getBoxIdentifier(){
-        return this.boxIdentifier;
+    public String getName(){
+        return this.name.equals("") ? "no name" : this.name;
+    }
+    
+    public String getDimensions() {
+        return String.format("%d X %d X %d mm", this.length, this.width, this.height);
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%s: %s", this.getName(), this.getDimensions());
     }
 }

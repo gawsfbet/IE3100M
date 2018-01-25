@@ -12,10 +12,10 @@ import java.text.DecimalFormat;
  * @author Kevin-Notebook
  */
 public class Level3_Bin {
-    private int length;
-    private int width;
-    private int height;
-    private String name;
+    private final int length;
+    private final int width;
+    private final int height;
+    private final String name;
     
     public Level3_Bin(int length, int width, int height) {
         this.name = "";
@@ -69,6 +69,6 @@ public class Level3_Bin {
     
     @Override
     public String toString() {
-        return String.format("%s: %s", getFullName(), getDimensions());
+        return String.format("%s: %s", this.getFullName(), this.getDimensions());
     }
 }
