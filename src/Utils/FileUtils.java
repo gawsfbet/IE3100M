@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * @author Kevin-Notebook
  */
 public class FileUtils {
-    public static ArrayList<Level3_Bin> getBinList() {
+    public static ArrayList<Level3_Bin> getBinTypesFromFile() {
         String line = "";
         String cvsSplitBy = ",";
         ArrayList<Level3_Bin> bins = new ArrayList<>();
