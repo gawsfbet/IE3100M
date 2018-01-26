@@ -11,7 +11,7 @@ import Model.Product.Level3_Bin;
  * Represents a packing configuration.
  * Contains the total number of (main) bins to use, as well as the bin to use for the remaining boxes, as well as total free volume
  */
-public class PackingConfig implements Comparable<PackingConfig> {
+public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     private final Level3_Bin mainBin;
     private Level3_Bin lastBin;
     
@@ -72,14 +72,14 @@ public class PackingConfig implements Comparable<PackingConfig> {
      * @param other
      * @return 
      */
-    @Override
+    /*@Override
     public int compareTo(PackingConfig other) {
         if (this.getTotalBinsInclRemainder() == other.getTotalBinsInclRemainder()) {
             return this.getTotalEmptyVol() <= other.getTotalEmptyVol() ? -1 : 1;
         } else {
             return this.getTotalBinsInclRemainder() - other.getTotalBinsInclRemainder();
         }
-    }
+    }*/
     
     @Override
     public String toString() {

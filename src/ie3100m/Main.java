@@ -193,7 +193,13 @@ public class Main {
      */
     private static PackingConfig determineBestConfig(ArrayList<PackingConfig> packingConfigs) {
         //might use a PQ for this instead
-        Collections.sort(packingConfigs);
+        Collections.sort(packingConfigs, (a, b) -> {
+            if (a.getTotalBinsInclRemainder() == b.getTotalBinsInclRemainder()) {
+                return a.getTotalEmptyVol() <= b.getTotalEmptyVol() ? -1 : 1;
+            } else {
+                return a.getTotalBinsInclRemainder() - b.getTotalBinsInclRemainder();
+            }
+        });
         
         for (PackingConfig config : packingConfigs) {
             if (config.getTotalBoxesPerBin() != 1) {
