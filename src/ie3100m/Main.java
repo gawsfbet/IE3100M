@@ -86,11 +86,11 @@ public class Main {
         });
         
         for (PackingConfig config : packingConfigs) {
-            /*if (config.getMainBinStats().getTotalQuantity() != 1) {
+            if (config.getMainBinStats().getTotalQuantity() != 1) {
                 return config;
-            }*/
-            System.out.println(config);
-            System.out.println();
+            }
+            //System.out.println(config);
+            //System.out.println();
         }
         
         return null;
