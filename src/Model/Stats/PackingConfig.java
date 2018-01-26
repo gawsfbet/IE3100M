@@ -27,16 +27,6 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
         this.mainBinStats = mainBinStats;
     }
     
-    /*public PackingConfig (Level3_Bin mainBin, int totalBoxesPerBin, int totalBins, int emptyVolPerBin, int remainderBoxes) {
-        this.mainBin = mainBin;
-        
-        this.totalBoxesPerBin = totalBoxesPerBin;
-        this.totalBins = totalBins;
-        this.remainderBoxes = remainderBoxes;
-        this.emptyVolPerBin = emptyVolPerBin;
-        this.totalEmptyVol = (long) totalBins * emptyVolPerBin;
-    }*/
-    
     public Order getOrder() {
         return this.order;
     }
@@ -66,29 +56,29 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     }
     
     public void setAttributes(Level3_Bin lastBin, int totalBins) {
-        this.lastBin = lastBin;
-        this.totalBins = totalBins;
+        setLastBin(lastBin);
+        setTotalBins(totalBins);
         
         if (lastBin == null) {//no remainder bins, either only 1 bin is needed or the boxes can fit into the main bins with no leftover
             if (totalBins == 1) { //case where only 1 bin is needed
-                this.totalEmptyVol = (long) this.mainBinStats.getBin().getVolume() - (this.order.getQuantity() * this.order.getBox().getVolume());
+                setTotalEmptyVol((long) this.mainBinStats.getBin().getVolume() - (this.order.getQuantity() * this.order.getBox().getVolume()));
             } else { //case where there are no leftovers
-                this.totalEmptyVol = (long) totalBins * this.mainBinStats.getEmptyVolume();
+                setTotalEmptyVol((long) totalBins * this.mainBinStats.getEmptyVolume());
             }
         } else {
-            this.totalEmptyVol = ((long) totalBins * this.mainBinStats.getEmptyVolume()) + ((long) lastBin.getVolume() - (this.getRemainderBoxes() * this.order.getBox().getVolume()));
+            setTotalEmptyVol(((long) totalBins * this.mainBinStats.getEmptyVolume()) + ((long) lastBin.getVolume() - (this.getRemainderBoxes() * this.order.getBox().getVolume())));
         }
     }
     
-    public void setLastBin(Level3_Bin lastBin) {
+    private void setLastBin(Level3_Bin lastBin) {
         this.lastBin = lastBin;
     }
     
-    public void setTotalBins(int totalBins) {
+    private void setTotalBins(int totalBins) {
         this.totalBins = totalBins;
     }
     
-    public void setTotalEmptyVol(long totalEmptyVol) {
+    private void setTotalEmptyVol(long totalEmptyVol) {
         this.totalEmptyVol = totalEmptyVol;
     }
     

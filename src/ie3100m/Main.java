@@ -34,7 +34,7 @@ public class Main {
          * TODO: put order stats as input
          */
         int numOrderedBox = 1000;
-        Level2_Box box = new Level2_Box(190, 186, 23, 0.65);
+        Level2_Box box = new Level2_Box(190, 186, 23, 0.06);
         Order order = new Order(box, numOrderedBox); //in mm and g
         
         ArrayList<Level3_Bin> binList = new ArrayList<>();

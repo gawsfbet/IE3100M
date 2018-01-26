@@ -24,13 +24,6 @@ public class BinStats {
         this.bin = bin;
     }
     
-    /*public BinStats(Level3_Bin bin, int quantityPerLayer, int totalQuantity, int emptyVolume) {
-        this.bin = bin;
-        this.quantityPerLayer = quantityPerLayer;
-        this.totalQuantity = totalQuantity;
-        this.emptyVolume = emptyVolume;
-    }*/
-    
     public Level2_Box getBox() {
         return this.box;
     }
