@@ -5,6 +5,7 @@
  */
 package Model.Stats;
 
+import Model.Order;
 import Model.Product.Level3_Bin;
 
 /**
@@ -12,16 +13,21 @@ import Model.Product.Level3_Bin;
  * Contains the total number of (main) bins to use, as well as the bin to use for the remaining boxes, as well as total free volume
  */
 public class PackingConfig /*implements Comparable<PackingConfig>*/ {
-    private final Level3_Bin mainBin;
+    private final Order order;
+    private final BinStats mainBinStats;
+    
     private Level3_Bin lastBin;
     
     private long totalEmptyVol;
-    private final int emptyVolPerBin; //might not need
-    private final int totalBoxesPerBin;
     private int totalBins;
-    private final int remainderBoxes;
+    //private int remainderBoxes;
     
-    public PackingConfig (Level3_Bin mainBin, int totalBoxesPerBin, int totalBins, int emptyVolPerBin, int remainderBoxes) {
+    public PackingConfig (Order order, BinStats mainBinStats) {
+        this.order = order;
+        this.mainBinStats = mainBinStats;
+    }
+    
+    /*public PackingConfig (Level3_Bin mainBin, int totalBoxesPerBin, int totalBins, int emptyVolPerBin, int remainderBoxes) {
         this.mainBin = mainBin;
         
         this.totalBoxesPerBin = totalBoxesPerBin;
@@ -29,6 +35,14 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
         this.remainderBoxes = remainderBoxes;
         this.emptyVolPerBin = emptyVolPerBin;
         this.totalEmptyVol = (long) totalBins * emptyVolPerBin;
+    }*/
+    
+    public Order getOrder() {
+        return this.order;
+    }
+    
+    public BinStats getMainBinStats() {
+        return this.mainBinStats;
     }
     
     public int getTotalBins() {
@@ -36,15 +50,11 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     }
     
     public int getTotalBinsInclRemainder() {
-        return remainderBoxes == 0 ? this.totalBins : this.totalBins + 1;
-    }
-    
-    public int getTotalBoxesPerBin() {
-        return this.totalBoxesPerBin;
+        return this.getRemainderBoxes() == 0 ? this.totalBins : this.totalBins + 1;
     }
     
     public int getRemainderBoxes() {
-        return this.remainderBoxes;
+        return this.order.getQuantity() % this.mainBinStats.getTotalQuantity();
     }
     
     public Level3_Bin getLastBin() {
@@ -53,6 +63,21 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     
     public long getTotalEmptyVol() {
         return this.totalEmptyVol;
+    }
+    
+    public void setAttributes(Level3_Bin lastBin, int totalBins) {
+        this.lastBin = lastBin;
+        this.totalBins = totalBins;
+        
+        if (lastBin == null) {//no remainder bins, either only 1 bin is needed or the boxes can fit into the main bins with no leftover
+            if (totalBins == 1) { //case where only 1 bin is needed
+                this.totalEmptyVol = (long) this.mainBinStats.getBin().getVolume() - (this.order.getQuantity() * this.order.getBox().getVolume());
+            } else { //case where there are no leftovers
+                this.totalEmptyVol = (long) totalBins * this.mainBinStats.getEmptyVolume();
+            }
+        } else {
+            this.totalEmptyVol = ((long) totalBins * this.mainBinStats.getEmptyVolume()) + ((long) lastBin.getVolume() - (this.getRemainderBoxes() * this.order.getBox().getVolume()));
+        }
     }
     
     public void setLastBin(Level3_Bin lastBin) {
@@ -83,11 +108,11 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     
     @Override
     public String toString() {
-        String info = "Bin type: " + this.mainBin.toString() 
-                + "\nBoxes per Bin: " + totalBoxesPerBin
+        String info = "Bin type: " + this.mainBinStats.getBin().toString() 
+                + "\nBoxes per Bin: " + this.mainBinStats.getTotalQuantity()
                 + "\nBins Needed: " + totalBins;
         
-        return info + (lastBin == null ? "\nLast Bin not needed" : "\n" + lastBin.toString() + " to contain remaining " + remainderBoxes + " boxes");
+        return info + (lastBin == null ? "\nLast Bin not needed" : "\n" + lastBin.toString() + " to contain remaining " + this.getRemainderBoxes() + " boxes");
     }
     
 }
