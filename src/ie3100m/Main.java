@@ -59,7 +59,6 @@ public class Main {
         } else {
             System.out.println("Chosen config:");
             System.out.println(bestConfig);
-            System.out.println("test");
         }
 
     }
