@@ -11,6 +11,7 @@ import Model.Product.Level2_Box;
 import Model.Product.Level3_Bin;
 import Model.Order;
 import Model.Stats.PackingConfig;
+import Model.Stats.RankSystem;
 import Utils.FileUtils;
 import ilog.concert.IloException;
 import java.io.IOException;
@@ -48,15 +49,10 @@ public class Main {
         allBinStats = calculateStatsForAllBins(box, binList);
         configs = determineAllConfigs(order, allBinStats);
 
-        ArrayList<PackingConfig> binsByNumbers = new ArrayList<>();
-        ArrayList<PackingConfig> binsByVolume = new ArrayList<>();
-
-        binsByNumbers = rankByNumbers(configs);
-        binsByVolume = rankByVolume(configs);
-
+        ArrayList<PackingConfig> binsByNumbers = new ArrayList<>(configs);
+        ArrayList<PackingConfig> binsByVolume = new ArrayList<>(configs);
+        
         PackingConfig bestConfig = determineBestConfig(binsByNumbers, binsByVolume);
-
-        // PackingConfig bestConfig = determineBestConfig(configs);
 
         if (bestConfig == null) {
             System.out.println("No suitable config found");
@@ -199,47 +195,51 @@ public class Main {
      * @param packingConfigs the array of possible packing configurations
      * @return the most desired packing configuration
      */
-     private static ArrayList<PackingConfig> determineBestConfig(ArrayList<PackingConfig> binsByNumbers, ArrayList<PackingConfig> binsByVolume){
-        int rankPoints, lowestRankPoints = Integer.MAX_VALUE;
-        PackingConfig firstRank = null;
-        for (PackingConfig numRank : binsByNumbers) {
-
-        }
-
-     }
-
-
-
-
-    private static ArrayList<PackingConfig> rankByNumbers(ArrayList<PackingConfig> packingConfigs) {
-        //might use a PQ for this instead
-        Collections.sort(packingConfigs, (a, b) -> {
+     private static PackingConfig determineBestConfig(ArrayList<PackingConfig> binsByNumbers, ArrayList<PackingConfig> binsByVolume){
+        Collections.sort(binsByNumbers, (a, b) -> {
             if (a.getTotalBinsInclRemainder() == b.getTotalBinsInclRemainder()) {
                 return a.getTotalEmptyVol() <= b.getTotalEmptyVol() ? -1 : 1;
             } else {
                 return a.getTotalBinsInclRemainder() - b.getTotalBinsInclRemainder();
             }
         });
-
-        // for (PackingConfig config : packingConfigs) {
-        //     if (config.getTotalBoxesPerBin() != 1) {
-        //         return config;
-        //     }
-        // }
-
-        return packingConfigs;
-    }
-
-    private static ArrayList<PackingConfig> rankByVolume(ArrayList<PackingConfig> packingConfigs){
-        Collections.sort(packingConfigs, (a, b) -> {
+        
+        Collections.sort(binsByVolume, (a, b) -> {
             if (a.getEmptyVolPerBin() == b.getEmptyVolPerBin()) {
                 return a.getTotalBinsInclRemainder() <= b.getTotalBinsInclRemainder() ? -1 : 1;
             } else {
                 return a.getEmptyVolPerBin() - b.getEmptyVolPerBin();
             }
         });
-        return packingConfigs;
-    }
+         
+        int rankPoints;
+        ArrayList<RankSystem> rankBins = new ArrayList<>();
+        
+         for (int i = 0; i < binsByNumbers.size(); i++) {
+             for (int j = 0; j < binsByVolume.size(); j++) {
+                 if (binsByNumbers.get(i).getMainBin().getName() == binsByVolume.get(j).getMainBin().getName()){
+                     rankPoints = i + j;
+                     RankSystem rank = new RankSystem(binsByVolume.get(j), i, j, rankPoints);
+                     rankBins.add(rank);
+                     }
+             }
+             
+         }
+        Collections.sort(rankBins);
+        
+        for (RankSystem rank : rankBins){
+            System.out.println(rank.toString());
+        }
+        for (RankSystem rank : rankBins){
+            if (rank.getConfig().getTotalBoxesPerBin() != 1){
+                return rank.getConfig();
+            }
+        }
+        
+         
+        return null;
+
+     }
 
     private static int calcUpperBound(Level2_Box box, Level3_Bin bin) {
         return bin.getBaseArea() / box.getBaseArea();
