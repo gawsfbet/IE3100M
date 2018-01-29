@@ -39,6 +39,10 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
       return this.emptyVolPerBin;
     }
 
+    public int getMainBin(){
+      return this.mainBin;
+    }
+
     public int getTotalBinsInclRemainder() {
         return remainderBoxes == 0 ? this.totalBins : this.totalBins + 1;
     }

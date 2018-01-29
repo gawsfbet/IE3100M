@@ -200,9 +200,10 @@ public class Main {
      * @return the most desired packing configuration
      */
      private static ArrayList<PackingConfig> determineBestConfig(ArrayList<PackingConfig> binsByNumbers, ArrayList<PackingConfig> binsByVolume){
+        int rankPoints, lowestRankPoints = Integer.MAX_VALUE;
         PackingConfig firstRank = null;
         for (PackingConfig numRank : binsByNumbers) {
-          
+
         }
 
      }

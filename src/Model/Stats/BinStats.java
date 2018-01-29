@@ -15,26 +15,26 @@ public class BinStats {
     private final int quantityPerLayer;
     private final int totalQuantity;
     private final int emptyVolume;
-    
+
     public BinStats(Level3_Bin bin, int quantityPerLayer, int totalQuantity, int emptyVolume) {
         this.bin = bin;
         this.quantityPerLayer = quantityPerLayer;
         this.totalQuantity = totalQuantity;
         this.emptyVolume = emptyVolume;
     }
-    
+
     public Level3_Bin getBin() {
         return this.bin;
     }
-    
+
     public int getQuantityPerLayer() {
         return this.quantityPerLayer;
     }
-    
+
     public int getTotalQuantity() {
         return this.totalQuantity;
     }
-    
+
     public int getEmptyVolume() {
         return this.emptyVolume;
     }
