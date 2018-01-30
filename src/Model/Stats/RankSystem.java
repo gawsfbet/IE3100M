@@ -59,7 +59,7 @@ public class RankSystem implements Comparable<RankSystem> {
     
     @Override
     public String toString(){
-        String info  = "rank: " + this.rankPoints + " numRank: " + this.numRank + " volRank: " + this.volRank;
+        String info  = "rank: " + this.rankPoints + " numRank: " + this.numRank + " volRank: " + this.volRank + " ";
         return info + this.config.toString();
     }
     
