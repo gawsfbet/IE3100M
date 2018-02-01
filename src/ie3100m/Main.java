@@ -5,6 +5,7 @@
  */
 package ie3100m;
 
+import Gui.TestGui;
 import Logic.BinStatsCalculator;
 import Logic.PackingConfigCalculator;
 import Logic.Solver;
@@ -74,6 +75,7 @@ public class Main {
         } else {
             System.out.println("Chosen config:");
             System.out.println(bestConfig);
+            TestGui gui = new TestGui(bestConfig.getMainBinStats());
         }
 
     }
