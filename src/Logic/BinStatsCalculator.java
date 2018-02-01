@@ -8,6 +8,7 @@ package Logic;
 import Model.Product.Level2_Box;
 import Model.Product.Level3_Bin;
 import Model.Stats.BinStats;
+import Model.Stats.CplexSolution;
 import ilog.concert.IloException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -51,13 +52,15 @@ public class BinStatsCalculator {
         
         Solver solver = new Solver(box, calcUpperBound(box, bin), bin);
         
-        int quantityPerLayer = solver.optimize(false);
+        CplexSolution solution = solver.optimize(false);
+        
+        int quantityPerLayer = solution.getNumBoxes();
         int totalQuantity = quantityPerLayer * (bin.getHeight() / box.getHeight());
         if (totalQuantity * box.getWeight() > MAX_WEIGHT) {
             totalQuantity = (int) (MAX_WEIGHT / box.getWeight());
         }
         
-        binStats.setAttributes(quantityPerLayer, totalQuantity);
+        binStats.setAttributes(quantityPerLayer, totalQuantity, solution.getBoxArrangements());
         return;
     }
     

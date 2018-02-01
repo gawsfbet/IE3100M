@@ -9,9 +9,15 @@ package Logic;
 
 import Model.Product.Level2_Box;
 import Model.Product.Level3_Bin;
+import Model.Stats.BoxArrangement;
+import Model.Stats.CplexSolution;
 
 import ilog.concert.*; //model
 import ilog.cplex.*; //algo
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -41,13 +47,13 @@ public class Solver {
         this.binVolumes = bin.getVolume();
     }
     
-    public int optimize(boolean output) throws IloException {
+    public CplexSolution optimize(boolean output) throws IloException {
         if (!output) {
             cplex.setOut(null);
         }
         
         //variables
-        IloIntVar[] P = cplex.boolVarArray(n);
+        IloIntVar[] P = cplex.boolVarArray(n); //whether it is in the box or not
         
         //coordinates
         IloIntVar[] x = cplex.intVarArray(n, 0, Integer.MAX_VALUE); //x_i
@@ -118,10 +124,31 @@ public class Solver {
                     }
                 }
             }
-            return (int) Math.round(cplex.getObjValue());
+            
+            return new CplexSolution((int) Math.round(cplex.getObjValue()), getArrangement(P, x, y, isHorizontal));
         } else {
             System.out.println("Solution not found.");
-            return Integer.MAX_VALUE;
+            return new CplexSolution(Integer.MAX_VALUE, new BoxArrangement[0]);
         }
+    }
+    
+    private BoxArrangement[] getArrangement(IloIntVar[] P, IloIntVar[] x, IloIntVar[] y, IloIntVar[] isHorizontal) throws IloException {
+        ArrayList<BoxArrangement> boxArrangements = new ArrayList<>();
+            
+        int[] solsP = Arrays.stream(cplex.getValues(P)).mapToInt(d -> (int) Math.round(d)).toArray();
+        double[] solsX = cplex.getValues(x), solsY = cplex.getValues(y), solsIsHorizontal = cplex.getValues(isHorizontal);
+        
+        for (int i = 0; i < solsP.length; i++) {
+            if (solsP[i] == 0) {
+                continue;
+            }
+            
+            boxArrangements.add(new BoxArrangement(
+                    (int) Math.round(solsX[i]), 
+                    (int) Math.round(solsY[i]), 
+                    Math.round(solsIsHorizontal[i]) == 1));
+        }
+        
+        return boxArrangements.toArray(new BoxArrangement[0]);
     }
 }
