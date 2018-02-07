@@ -87,7 +87,7 @@ public class Main {
      * @return the most desired packing configuration
      */
     private static PackingConfig determineBestConfig(ArrayList<PackingConfig> binsByNumbers, ArrayList<PackingConfig> binsByVolume) {
-        System.out.println("testing inside determine");
+//        System.out.println("testing inside determine");
         Collections.sort(binsByNumbers, (a, b) -> {
             if (a.getTotalBinsInclRemainder() == b.getTotalBinsInclRemainder()) {
                 return a.getTotalEmptyVol() <= b.getTotalEmptyVol() ? -1 : 1;
@@ -103,7 +103,7 @@ public class Main {
                 return a.getMainBinStats().getEmptyVolume() - b.getMainBinStats().getEmptyVolume();
             }
         });
-        System.out.println("sorted 2 arrays by num and vol");
+//        System.out.println("sorted 2 arrays by num and vol");
         int rankPoints;
         ArrayList<RankSystem> rankBins = new ArrayList<>();
 
@@ -120,9 +120,9 @@ public class Main {
         Collections.sort(rankBins);
         
         
-        for (RankSystem rank : rankBins) {
-            System.out.println(rank.toString());
-        }
+//        for (RankSystem rank : rankBins) {
+//            System.out.println(rank.toString());
+//        }
         for (RankSystem rank : rankBins) {
             if (rank.getConfig().getMainBinStats().getTotalQuantity() != 1) {
                 return rank.getConfig();
