@@ -66,10 +66,24 @@ public class CoordsSolver {
             for (int k = 0; k < n; k++) {
                 if (i == k) continue;
                 cplex.addLe(cplex.sum(x[i], cplex.prod(box.getLength(), isHorizontal[i]), cplex.prod(box.getWidth(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))),
-                        cplex.sum(x[k], cplex.prod(M, cplex.sum(1, cplex.prod(-1, leftOf[i][k]))), cplex.prod(M, cplex.sum(1, cplex.prod(-1, P[i]))), cplex.prod(M, cplex.sum(1, cplex.prod(-1, P[k])))));
+                        cplex.sum(x[k], cplex.prod(M, cplex.sum(1, cplex.prod(-1, leftOf[i][k])))));
                 cplex.addLe(cplex.sum(y[i], cplex.prod(box.getWidth(), isHorizontal[i]), cplex.prod(box.getLength(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))),
-                        cplex.sum(y[k], cplex.prod(M, cplex.sum(1, cplex.prod(-1, frontOf[i][k]))), cplex.prod(M, cplex.sum(1, cplex.prod(-1, P[i]))), cplex.prod(M, cplex.sum(1, cplex.prod(-1, P[k])))));
+                        cplex.sum(y[k], cplex.prod(M, cplex.sum(1, cplex.prod(-1, frontOf[i][k])))));
             }
+        }
+        
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < k; i++) {
+                cplex.addEq(cplex.sum(leftOf[i][k], frontOf[i][k]), 1);
+            }
+        }
+        
+        //Lvl 3 Bin spatial constraints
+        for (int i = 0; i < n; i++) {
+            cplex.addLe(cplex.sum(x[i], cplex.prod(box.getLength(), isHorizontal[i]), cplex.prod(box.getWidth(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
+                    bin.getLength());
+            cplex.addLe(cplex.sum(y[i], cplex.prod(box.getWidth(), isHorizontal[i]), cplex.prod(box.getLength(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
+                    bin.getWidth());
         }
     }
 }
