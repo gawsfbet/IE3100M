@@ -47,35 +47,36 @@ public class Main {
         
         try {
             binList = FileUtils.loadBinTypes("boxes.csv");
+
+            for (Level3_Bin bin : binList) {
+                allBinStats.add(new BinStats(box, bin));
+            }
+            BinStatsCalculator.setStatsForAllBins(allBinStats);
+
+            for (BinStats binStat : allBinStats) {
+                if (binStat.getTotalQuantity() > 0) {
+                    configs.add(new PackingConfig(order, binStat));
+                }
+            }
+            PackingConfigCalculator.setAllConfigs(configs, allBinStats);
+
+            ArrayList<PackingConfig> binsByNumbers = new ArrayList<>(configs);
+            ArrayList<PackingConfig> binsByVolume = new ArrayList<>(configs);
+
+            PackingConfig bestConfig = determineBestConfig(binsByNumbers, binsByVolume);
+
+            if (bestConfig == null) {
+                System.out.println("No suitable config found");
+            } else {
+                BinStatsCalculator.determineArrangement(bestConfig.getMainBinStats());
+                System.out.println("Chosen config:");
+                System.out.println(bestConfig);
+                TestGui gui = new TestGui(bestConfig.getMainBinStats());
+            }
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        
-
-        for (Level3_Bin bin : binList) {
-            allBinStats.add(new BinStats(box, bin));
-        }
-        BinStatsCalculator.setStatsForAllBins(allBinStats);
-
-        for (BinStats binStat : allBinStats) {
-            if (binStat.getTotalQuantity() > 0) {
-                configs.add(new PackingConfig(order, binStat));
-            }
-        }
-        PackingConfigCalculator.setAllConfigs(configs, allBinStats);
-        
-        ArrayList<PackingConfig> binsByNumbers = new ArrayList<>(configs);
-        ArrayList<PackingConfig> binsByVolume = new ArrayList<>(configs);
-
-        PackingConfig bestConfig = determineBestConfig(binsByNumbers, binsByVolume);
-
-        if (bestConfig == null) {
-            System.out.println("No suitable config found");
-        } else {
-            System.out.println("Chosen config:");
-            System.out.println(bestConfig);
-            TestGui gui = new TestGui(bestConfig.getMainBinStats());
+        } catch (IloException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -85,7 +86,7 @@ public class Main {
      *
      * @param packingConfigs the array of possible packing configurations
      * @return the most desired packing configuration
-     */
+     */ 
     private static PackingConfig determineBestConfig(ArrayList<PackingConfig> binsByNumbers, ArrayList<PackingConfig> binsByVolume) {
 //        System.out.println("testing inside determine");
         Collections.sort(binsByNumbers, (a, b) -> {

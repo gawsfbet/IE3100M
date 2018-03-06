@@ -47,7 +47,7 @@ public class Solver {
         this.binVolumes = bin.getVolume();
     }
     
-    public CplexSolution optimize(boolean output) throws IloException {
+    public int optimize(boolean output) throws IloException {
         if (!output) {
             cplex.setOut(null);
         }
@@ -125,10 +125,10 @@ public class Solver {
                 }
             }
             
-            return new CplexSolution((int) Math.round(cplex.getObjValue()), getArrangement(P, x, y, isHorizontal));
+            return (int) Math.round(cplex.getObjValue());
         } else {
             System.out.println("Solution not found.");
-            return new CplexSolution(Integer.MAX_VALUE, new BoxArrangement[0]);
+            return Integer.MAX_VALUE;
         }
     }
     
