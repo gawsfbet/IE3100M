@@ -12,6 +12,7 @@ import Model.Stats.CplexSolution;
 import ilog.concert.IloException;
 import ilog.concert.IloIntExpr;
 import ilog.concert.IloIntVar;
+import ilog.concert.IloNumExpr;
 import ilog.cplex.IloCplex;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,12 +61,17 @@ public class CoordsSolver {
         
         //alignment
         IloIntVar[] isHorizontal = cplex.boolVarArray(n); //l_xi
+        IloIntVar alignmentFlag = cplex.boolVar();
 
         //define objective
-        IloIntExpr objective = cplex.sum(cplex.sum(x), cplex.sum(y));
+        IloNumExpr objective = cplex.sum(alignmentFlag, cplex.prod(2.0 / Math.max(bin.getLength(), bin.getWidth()), cplex.sum(cplex.sum(x), cplex.sum(y))));
         cplex.addMinimize(objective);
         
         //constraints
+        //Alignment Flags
+        IloNumExpr eqn = cplex.prod(-4.0 / (n * n), cplex.prod(cplex.sum(isHorizontal), cplex.sum(cplex.sum(isHorizontal), -n)));
+        cplex.addGe(alignmentFlag, eqn);
+        
         //Lvl 2 box spatial constraints
         for (int i = 0; i < n; i++) {
             for (int k = 0; k < n; k++) {
