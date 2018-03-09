@@ -20,10 +20,19 @@ import java.util.logging.Logger;
  * @author Kevin-Notebook
  */
 public class BinStatsCalculator {
-    public static double MAX_WEIGHT = 30;
+    private static double MAX_WEIGHT = 30;
+    private static int buffer = 0;
     
-    public void setWeight(double maxWeight) {
-        MAX_WEIGHT = maxWeight;
+    public static void setWeight(double maxWeight) {
+        BinStatsCalculator.MAX_WEIGHT = maxWeight;
+    }
+    
+    public static void setBuffer(int buffer) {
+        BinStatsCalculator.buffer = buffer;
+    }
+    
+    public static int getBuffer() {
+        return BinStatsCalculator.buffer;
     }
     
     /**
@@ -51,15 +60,15 @@ public class BinStatsCalculator {
         Level2_Box box = binStats.getBox();
         Level3_Bin bin = binStats.getBin();
         
-        QuantitySolver solver = new QuantitySolver(box, calcUpperBound(box, bin), bin);
+        QuantitySolver solver = new QuantitySolver(box, calcUpperBound(box, bin), bin, buffer);
         
         int quantityPerLayer = solver.optimize(false);
-        int totalQuantity = quantityPerLayer * (bin.getHeight() / box.getHeight());
+        int totalQuantity = quantityPerLayer * ((bin.getHeight() - 2 * buffer) / box.getHeight());
         if (totalQuantity * box.getWeight() > MAX_WEIGHT) {
             totalQuantity = (int) (MAX_WEIGHT / box.getWeight());
         }
         
-        binStats.setAttributes(quantityPerLayer, totalQuantity);
+        binStats.setAttributes(quantityPerLayer, totalQuantity, buffer);
         return;
     }
     
@@ -67,7 +76,7 @@ public class BinStatsCalculator {
         Level2_Box box = binStats.getBox();
         Level3_Bin bin = binStats.getBin();
         
-        CoordsSolver solver = new CoordsSolver(box, binStats.getQuantityPerLayer(), bin);
+        CoordsSolver solver = new CoordsSolver(box, binStats.getQuantityPerLayer(), bin, buffer);
         
         BoxArrangement[] arrangement = solver.align(false);
         

@@ -34,13 +34,25 @@ public class Level3_Bin {
     public int getLength() {
         return this.length;
     }
+    
+    public int getTrimmedLength(int buffer) {
+        return this.length - 2 * buffer;
+    }
 
     public int getWidth() {
         return this.width;
     }
+    
+    public int getTrimmedWidth(int buffer) {
+        return this.width - 2 * buffer;
+    }
 
     public int getHeight() {
         return this.height;
+    }
+    
+    public int getTrimmedHeight(int buffer) {
+        return this.height - 2 * buffer;
     }
 
     public int getBaseArea() {
@@ -49,6 +61,10 @@ public class Level3_Bin {
 
     public int getVolume() {
         return this.length * this.width * this.height;
+    }
+    
+    public int getTrimmedVolume(int buffer) {
+        return (this.length - 2 * buffer) * (this.width - 2 * buffer) * (this.height - 2 * buffer);
     }
 
     public String getName() {

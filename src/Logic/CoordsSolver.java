@@ -33,12 +33,15 @@ public class CoordsSolver {
     private Level2_Box box;
     private Level3_Bin bin;
     
-    public CoordsSolver(Level2_Box box, int n, Level3_Bin bin) throws IloException {
+    private final int buffer;
+    
+    public CoordsSolver(Level2_Box box, int n, Level3_Bin bin, int buffer) throws IloException {
         this.cplex = new IloCplex();
         
         this.box = box;
         this.bin = bin;
         this.n = n;
+        this.buffer = buffer;
     }
     
     public BoxArrangement[] align(boolean output) throws IloException {
@@ -47,8 +50,8 @@ public class CoordsSolver {
         }
         
         //coordinates
-        IloIntVar[] x = cplex.intVarArray(n, 0, Integer.MAX_VALUE); //x_i
-        IloIntVar[] y = cplex.intVarArray(n, 0, Integer.MAX_VALUE); //y_i
+        IloIntVar[] x = cplex.intVarArray(n, buffer, Integer.MAX_VALUE); //x_i
+        IloIntVar[] y = cplex.intVarArray(n, buffer, Integer.MAX_VALUE); //y_i
         
         //orientation
         IloIntVar[][] leftOf = new IloIntVar[n][n]; //a_ik
@@ -92,9 +95,9 @@ public class CoordsSolver {
         //Lvl 3 Bin spatial constraints
         for (int i = 0; i < n; i++) {
             cplex.addLe(cplex.sum(x[i], cplex.prod(box.getLength(), isHorizontal[i]), cplex.prod(box.getWidth(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
-                    bin.getLength());
+                    bin.getLength() - buffer);
             cplex.addLe(cplex.sum(y[i], cplex.prod(box.getWidth(), isHorizontal[i]), cplex.prod(box.getLength(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
-                    bin.getWidth());
+                    bin.getWidth() - buffer);
         }
         
         if (cplex.solve()) {

@@ -30,12 +30,12 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    public static final double MAX_WEIGHT = 30;
     public static final int qty = 1000;
     public static final int length = 190;
     public static final int width = 186;
     public static final int height = 23;
     public static final double weight = 0.06;
+    public static final int buffer = 0; //in mm
 
     public static void main(String[] args) {
         /**
@@ -43,6 +43,7 @@ public class Main {
          */
         Level2_Box box = new Level2_Box(length, width, height, weight);
         Order order = new Order(box, qty); //in mm and g
+        BinStatsCalculator.setBuffer(buffer);
 
         ArrayList<Level3_Bin> binList = new ArrayList<>();
 

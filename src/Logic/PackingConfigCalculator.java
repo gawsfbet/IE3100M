@@ -80,7 +80,7 @@ public class PackingConfigCalculator {
         
         for (BinStats binStat : candidateRemainingBins) {
             if (binStat.getTotalQuantity() >= remainder) { //if the bin can contain all the remainder boxes
-                emptyVol = binStat.getBin().getVolume() - box.getVolume() * remainder;
+                emptyVol = binStat.getBin().getTrimmedVolume(BinStatsCalculator.getBuffer()) - box.getVolume() * remainder;
                 if (emptyVol < minEmptyVol) {
                     lastBin = binStat.getBin();
                     minEmptyVol = emptyVol;

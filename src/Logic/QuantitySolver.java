@@ -33,15 +33,18 @@ public class QuantitySolver {
     private Level2_Box box;
     private Level3_Bin bin;
     
+    private int buffer;
+    
     private int boxVolume;
     private int binVolumes;
     
-    public QuantitySolver(Level2_Box box, int n, Level3_Bin bin) throws IloException {
+    public QuantitySolver(Level2_Box box, int n, Level3_Bin bin, int buffer) throws IloException {
         this.cplex = new IloCplex();
         
         this.box = box;
         this.bin = bin;
         this.n = n;
+        this.buffer = buffer;
         
         this.boxVolume = box.getVolume();
         this.binVolumes = bin.getVolume();
@@ -56,8 +59,8 @@ public class QuantitySolver {
         IloIntVar[] P = cplex.boolVarArray(n); //whether it is in the box or not
         
         //coordinates
-        IloIntVar[] x = cplex.intVarArray(n, 0, Integer.MAX_VALUE); //x_i
-        IloIntVar[] y = cplex.intVarArray(n, 0, Integer.MAX_VALUE); //y_i
+        IloIntVar[] x = cplex.intVarArray(n, buffer, Integer.MAX_VALUE); //x_i
+        IloIntVar[] y = cplex.intVarArray(n, buffer, Integer.MAX_VALUE); //y_i
         
         //orientation
         IloIntVar[][] leftOf = new IloIntVar[n][n]; //a_ik
@@ -101,9 +104,9 @@ public class QuantitySolver {
         //Lvl 3 Bin spatial constraints
         for (int i = 0; i < n; i++) {
             cplex.addLe(cplex.sum(x[i], cplex.prod(box.getLength(), isHorizontal[i]), cplex.prod(box.getWidth(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
-                    cplex.sum(bin.getLength(), cplex.prod(M, cplex.sum(1, cplex.prod(-1, P[i])))));
+                    cplex.sum(bin.getLength() - buffer, cplex.prod(M, cplex.sum(1, cplex.prod(-1, P[i])))));
             cplex.addLe(cplex.sum(y[i], cplex.prod(box.getWidth(), isHorizontal[i]), cplex.prod(box.getLength(), cplex.sum(1, cplex.prod(-1, isHorizontal[i])))), 
-                    cplex.sum(bin.getWidth(), cplex.prod(M, cplex.sum(1, cplex.prod(-1, P[i])))));
+                    cplex.sum(bin.getWidth() - buffer, cplex.prod(M, cplex.sum(1, cplex.prod(-1, P[i])))));
         }
         
         //Weight constraints
@@ -115,7 +118,7 @@ public class QuantitySolver {
         
         if (cplex.solve()) {
             if (output) {
-                System.out.println("Free Space: " + (bin.getVolume() - box.getVolume() * cplex.getObjValue()));
+                System.out.println("Free Space: " + (bin.getTrimmedVolume(buffer) - box.getVolume() * cplex.getObjValue()));
                 System.out.println("Number of boxes: " + cplex.getObjValue());
 
                 for (int i = 0; i < n; i++) {

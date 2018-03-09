@@ -5,6 +5,7 @@
  */
 package Gui;
 
+import Logic.BinStatsCalculator;
 import Model.Stats.BinStats;
 import Model.Stats.BoxArrangement;
 import java.awt.BasicStroke;
@@ -24,6 +25,7 @@ public class TestGui extends JFrame {
     
     private final Rectangle binRect;
     private final ArrayList<Rectangle> boxRects;
+    private final Rectangle[] bufferRects = new Rectangle[4];
     
     public TestGui(BinStats binStats) {
         super("Recommended packing configuration");
@@ -38,6 +40,12 @@ public class TestGui extends JFrame {
                 boxRects.add(new Rectangle(arrangement.getX(), arrangement.getY(), binStats.getBox().getWidth(), binStats.getBox().getLength()));
             }
         }
+        
+        int buffer = BinStatsCalculator.getBuffer();
+        this.bufferRects[0] = new Rectangle(0, 0, binStats.getBin().getLength() - buffer, buffer);
+        this.bufferRects[1] = new Rectangle(binStats.getBin().getLength() - buffer, 0, buffer, binStats.getBin().getWidth() - buffer);
+        this.bufferRects[2] = new Rectangle(buffer, binStats.getBin().getWidth() - buffer, binStats.getBin().getLength() - buffer, buffer);
+        this.bufferRects[3] = new Rectangle(0, buffer, buffer, binStats.getBin().getWidth() - buffer);
 
         //Set default close operation for JFrame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,12 +62,10 @@ public class TestGui extends JFrame {
         super.paint(g);
         Graphics2D g2 = (Graphics2D) g;
         
-                
-        /*BasicStroke dashed = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,0,new float[] {5,5}, 0);
-        g2.setStroke(dashed);*/
-
-        //draw rectangle outline
-        //x, y, width, height
+        drawBuffer(g, bufferRects[0]);
+        drawBuffer(g, bufferRects[1]);
+        drawBuffer(g, bufferRects[2]);
+        drawBuffer(g, bufferRects[3]);
         
         for (Rectangle rect : boxRects) {
             drawRect(g, rect);
@@ -80,5 +86,10 @@ public class TestGui extends JFrame {
         g.drawRect(OFFSET_X + rect.getX(), OFFSET_Y + rect.getY(), rect.getWidth(), rect.getHeight());
         g.setColor(Color.GREEN);
         g.fillRect(OFFSET_X + rect.getX() + 1, OFFSET_Y + rect.getY() + 1, rect.getWidth() - 1, rect.getHeight() - 1);
+    }
+    
+    private void drawBuffer(Graphics g, Rectangle rect) {
+        g.setColor(Color.YELLOW);
+        g.fillRect(OFFSET_X + rect.getX(), OFFSET_Y + rect.getY(), rect.getWidth(), rect.getHeight());
     }
 }
