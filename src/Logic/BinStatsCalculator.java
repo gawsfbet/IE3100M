@@ -51,7 +51,7 @@ public class BinStatsCalculator {
         Level2_Box box = binStats.getBox();
         Level3_Bin bin = binStats.getBin();
         
-        Solver solver = new Solver(box, calcUpperBound(box, bin), bin);
+        QuantitySolver solver = new QuantitySolver(box, calcUpperBound(box, bin), bin);
         
         int quantityPerLayer = solver.optimize(false);
         int totalQuantity = quantityPerLayer * (bin.getHeight() / box.getHeight());
@@ -69,7 +69,7 @@ public class BinStatsCalculator {
         
         CoordsSolver solver = new CoordsSolver(box, binStats.getQuantityPerLayer(), bin);
         
-        BoxArrangement[] arrangement = solver.optimize(false);
+        BoxArrangement[] arrangement = solver.align(false);
         
         binStats.setArrangementForOneLayer(arrangement);
     }

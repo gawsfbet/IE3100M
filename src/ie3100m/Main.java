@@ -8,7 +8,7 @@ package ie3100m;
 import Gui.TestGui;
 import Logic.BinStatsCalculator;
 import Logic.PackingConfigCalculator;
-import Logic.Solver;
+import Logic.QuantitySolver;
 import Model.Stats.BinStats;
 import Model.Product.Level2_Box;
 import Model.Product.Level3_Bin;
@@ -31,14 +31,18 @@ import java.util.logging.Logger;
 public class Main {
 
     public static final double MAX_WEIGHT = 30;
+    public static final int qty = 1000;
+    public static final int length = 190;
+    public static final int width = 186;
+    public static final int height = 23;
+    public static final double weight = 0.06;
 
     public static void main(String[] args) {
         /**
          * TODO: put order stats as input
          */
-        int numOrderedBox = 1000;
-        Level2_Box box = new Level2_Box(190, 186, 23, 0.06);
-        Order order = new Order(box, numOrderedBox); //in mm and g
+        Level2_Box box = new Level2_Box(length, width, height, weight);
+        Order order = new Order(box, qty); //in mm and g
 
         ArrayList<Level3_Bin> binList = new ArrayList<>();
 

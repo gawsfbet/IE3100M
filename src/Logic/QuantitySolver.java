@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * @author Kevin-Notebook
  */
 //kevin's branch
-public class Solver {
+public class QuantitySolver {
     private IloCplex cplex;
     private int n; //upper bound of level 2 box
     
@@ -36,7 +36,7 @@ public class Solver {
     private int boxVolume;
     private int binVolumes;
     
-    public Solver(Level2_Box box, int n, Level3_Bin bin) throws IloException {
+    public QuantitySolver(Level2_Box box, int n, Level3_Bin bin) throws IloException {
         this.cplex = new IloCplex();
         
         this.box = box;

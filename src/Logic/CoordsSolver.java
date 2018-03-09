@@ -41,7 +41,7 @@ public class CoordsSolver {
         this.n = n;
     }
     
-    public BoxArrangement[] optimize(boolean output) throws IloException {
+    public BoxArrangement[] align(boolean output) throws IloException {
         if (!output) {
             cplex.setOut(null);
         }
