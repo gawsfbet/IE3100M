@@ -5,17 +5,10 @@
  */
 package Gui;
 
-import Model.Stats.BinStats;
 import Model.Stats.PackingConfig;
 import ie3100m.Main;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -250,14 +243,100 @@ public class Gui extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        int quantity = Integer.parseInt(jTextField1.getText());
-        int length = Integer.parseInt(jTextField2.getText());
-        int width = Integer.parseInt(jTextField3.getText());
-        int height = Integer.parseInt(jTextField4.getText());
-        double weight = Double.parseDouble(jTextField5.getText());
-        int buffer = Integer.parseInt(jTextField6.getText());
+        int quantity = 0, length = 0, width = 0, height = 0, buffer = 0;
+        double weight = 0;
         
-        jTextPane1.setText("I plan to poot the outpoot here.");
+        try {
+            quantity = Integer.parseInt(jTextField1.getText());
+            if (quantity <= 0) {
+                JOptionPane.showMessageDialog(this, "'Quantity' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            String message = "";
+            if (jTextField1.getText().equals("")) {
+                message = "Please enter a number in the field 'Quantity'.";
+            } else {
+                message = "'Quantity' is in the wrong format.";
+            }
+            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            length = Integer.parseInt(jTextField2.getText());
+            if (length <= 0) {
+                JOptionPane.showMessageDialog(this, "'Length' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            String message;
+            if (jTextField2.getText().equals("")) {
+                message = "Please enter a number in the field 'Length'.";
+            } else {
+                message = "'Length' is in the wrong format.";
+            }
+            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            width = Integer.parseInt(jTextField3.getText());
+            if (width <= 0) {
+                JOptionPane.showMessageDialog(this, "'Width' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            String message = "";
+            if (jTextField3.getText().equals("")) {
+                message = "Please enter a number in the field 'Width'.";
+            } else {
+                message = "'Width' is in the wrong format.";
+            }
+            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            height = Integer.parseInt(jTextField4.getText());
+            if (height <= 0) {
+                JOptionPane.showMessageDialog(this, "'Height' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            String message = "";
+            if (jTextField4.getText().equals("")) {
+                message = "Please enter a number in the field 'Height'.";
+            } else {
+                message = "'Height' is in the wrong format.";
+            }
+            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            weight = Double.parseDouble(jTextField5.getText());
+            if (weight <= 0) {
+                JOptionPane.showMessageDialog(this, "'Weight' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException ex) {
+            String message = "";
+            if (jTextField5.getText().equals("")) {
+                message = "Please enter a number in the field 'Weight'.";
+            } else {
+                message = "'Weight' is in the wrong format.";
+            }
+            JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            buffer = Integer.parseInt(jTextField6.getText());
+            if (buffer <= 0) {
+                jTextField6.setText("0");
+                buffer = 0;
+            }
+        } catch (NumberFormatException ex) {
+            jTextField6.setText("0");
+        }
+        jTextPane1.setText("Calculating...");
+        
         Main main = new Main(quantity, length, width, height, weight, buffer);
         PackingConfig bestConfig = main.run();
         
