@@ -30,14 +30,23 @@ import java.util.logging.Logger;
  */
 public class Main {
 
-    public static final int qty = 1000;
-    public static final int length = 190;
-    public static final int width = 186;
-    public static final int height = 23;
-    public static final double weight = 0.06;
-    public static final int buffer = 0; //in mm
+    private final int qty;
+    private final int length;
+    private final int width;
+    private final int height;
+    private final double weight;
+    private final int buffer; //in mm
+    
+    public Main(int qty, int length, int width, int height, double weight, int buffer) {
+        this.qty = qty;
+        this.length = length;
+        this.width = width;
+        this.height = height;
+        this.weight = weight;
+        this.buffer = buffer;
+    }
 
-    public static void main(String[] args) {
+    public PackingConfig run() {
         /**
          * TODO: put order stats as input
          */
@@ -72,16 +81,17 @@ public class Main {
 
             if (bestConfig == null) {
                 System.out.println("No suitable config found");
+                return null;
             } else {
                 BinStatsCalculator.determineArrangement(bestConfig.getMainBinStats());
-                System.out.println("Chosen config:");
-                System.out.println(bestConfig);
-                TestGui gui = new TestGui(bestConfig.getMainBinStats());
+                return bestConfig;
             }
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         } catch (IloException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
         }
 
     }

@@ -12,24 +12,44 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  *
  * @author Kevin-Notebook
  */
-public class TestGui extends JFrame {
+public class TestGui extends JPanel {
     private static final int OFFSET_X = 50;
     private static final int OFFSET_Y = 50;
     
-    private final Rectangle binRect;
-    private final ArrayList<Rectangle> boxRects;
-    private final Rectangle[] bufferRects = new Rectangle[4];
+    private Rectangle binRect;
+    private ArrayList<Rectangle> boxRects;
+    private Rectangle[] bufferRects = new Rectangle[4];
     
-    public TestGui(BinStats binStats) {
-        super("Recommended packing configuration");
+    public TestGui() {
+        super();
+        this.binRect = new Rectangle(0, 0, 0, 0);
+        this.boxRects = new ArrayList<>();
         
+        int buffer = BinStatsCalculator.getBuffer();
+        this.bufferRects[0] = new Rectangle(0, 0, 0, 0);
+        this.bufferRects[1] = new Rectangle(0, 0, 0, 0);
+        this.bufferRects[2] = new Rectangle(0, 0, 0, 0);
+        this.bufferRects[3] = new Rectangle(0, 0, 0, 0);
+
+        //Set default close operation for JFrame
+
+        //Set JFrame size
+        //setSize(1000, 700);
+
+        //Make JFrame visible
+        setVisible(true);
+    }
+    
+    public void setNewBinStats(BinStats binStats) {
         this.binRect = new Rectangle(0, 0, binStats.getBin().getLength(), binStats.getBin().getWidth());
         this.boxRects = new ArrayList<>();
         
@@ -46,20 +66,11 @@ public class TestGui extends JFrame {
         this.bufferRects[1] = new Rectangle(binStats.getBin().getLength() - buffer, 0, buffer, binStats.getBin().getWidth() - buffer);
         this.bufferRects[2] = new Rectangle(buffer, binStats.getBin().getWidth() - buffer, binStats.getBin().getLength() - buffer, buffer);
         this.bufferRects[3] = new Rectangle(0, buffer, buffer, binStats.getBin().getWidth() - buffer);
-
-        //Set default close operation for JFrame
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //Set JFrame size
-        setSize(1000, 700);
-
-        //Make JFrame visible
-        setVisible(true);
     }
     
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         
         drawBuffer(g, bufferRects[0]);
