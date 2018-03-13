@@ -37,13 +37,16 @@ public class Main {
     private final double weight;
     private final int buffer; //in mm
     
-    public Main(int qty, int length, int width, int height, double weight, int buffer) {
+    private boolean bufferBothSides;
+    
+    public Main(int qty, int length, int width, int height, double weight, int buffer, boolean bufferBothSides) {
         this.qty = qty;
         this.length = length;
         this.width = width;
         this.height = height;
         this.weight = weight;
         this.buffer = buffer;
+        this.bufferBothSides = bufferBothSides;
     }
 
     public PackingConfig run() {
@@ -53,6 +56,7 @@ public class Main {
         Level2_Box box = new Level2_Box(length, width, height, weight);
         Order order = new Order(box, qty); //in mm and g
         BinStatsCalculator.setBuffer(buffer);
+        BinStatsCalculator.setBufferBothSides(bufferBothSides);
 
         ArrayList<Level3_Bin> binList = new ArrayList<>();
 

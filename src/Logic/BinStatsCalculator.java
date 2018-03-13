@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 public class BinStatsCalculator {
     private static double MAX_WEIGHT = 30;
     private static int buffer = 0;
+    private static boolean bufferBothSides;
     
     public static void setWeight(double maxWeight) {
         BinStatsCalculator.MAX_WEIGHT = maxWeight;
@@ -33,6 +34,14 @@ public class BinStatsCalculator {
     
     public static int getBuffer() {
         return BinStatsCalculator.buffer;
+    }
+    
+    public static void setBufferBothSides(boolean bufferBothSides) {
+        BinStatsCalculator.bufferBothSides = bufferBothSides;
+    }
+    
+    public static boolean getBufferBothSides() {
+        return BinStatsCalculator.bufferBothSides;
     }
     
     /**
@@ -60,15 +69,15 @@ public class BinStatsCalculator {
         Level2_Box box = binStats.getBox();
         Level3_Bin bin = binStats.getBin();
         
-        QuantitySolver solver = new QuantitySolver(box, calcUpperBound(box, bin), bin, buffer);
+        QuantitySolver solver = new QuantitySolver(box, calcUpperBound(box, bin), bin, buffer, bufferBothSides);
         
         int quantityPerLayer = solver.optimize(false);
-        int totalQuantity = quantityPerLayer * ((bin.getHeight() - 2 * buffer) / box.getHeight());
+        int totalQuantity = bufferBothSides ? quantityPerLayer * ((bin.getHeight() - 2 * buffer) / box.getHeight()) : quantityPerLayer * ((bin.getHeight() - buffer) / box.getHeight());
         if (totalQuantity * box.getWeight() > MAX_WEIGHT) {
             totalQuantity = (int) (MAX_WEIGHT / box.getWeight());
         }
         
-        binStats.setAttributes(quantityPerLayer, totalQuantity, buffer);
+        binStats.setAttributes(quantityPerLayer, totalQuantity, buffer, bufferBothSides);
         return;
     }
     
@@ -76,7 +85,7 @@ public class BinStatsCalculator {
         Level2_Box box = binStats.getBox();
         Level3_Bin bin = binStats.getBin();
         
-        CoordsSolver solver = new CoordsSolver(box, binStats.getQuantityPerLayer(), bin, buffer);
+        CoordsSolver solver = new CoordsSolver(box, binStats.getQuantityPerLayer(), bin, buffer, bufferBothSides);
         
         BoxArrangement[] arrangement = solver.align(false);
         

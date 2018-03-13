@@ -35,13 +35,16 @@ public class CoordsSolver {
     
     private final int buffer;
     
-    public CoordsSolver(Level2_Box box, int n, Level3_Bin bin, int buffer) throws IloException {
+    private final boolean bufferBothSides;
+    
+    public CoordsSolver(Level2_Box box, int n, Level3_Bin bin, int buffer, boolean bufferBothSides) throws IloException {
         this.cplex = new IloCplex();
         
         this.box = box;
         this.bin = bin;
         this.n = n;
         this.buffer = buffer;
+        this.bufferBothSides = bufferBothSides;
     }
     
     public BoxArrangement[] align(boolean output) throws IloException {
@@ -50,8 +53,16 @@ public class CoordsSolver {
         }
         
         //coordinates
-        IloIntVar[] x = cplex.intVarArray(n, buffer, Integer.MAX_VALUE); //x_i
-        IloIntVar[] y = cplex.intVarArray(n, buffer, Integer.MAX_VALUE); //y_i
+        IloIntVar[] x; //x_i
+        IloIntVar[] y; //y_i
+        
+        if (bufferBothSides) {
+            x = cplex.intVarArray(n, buffer, Integer.MAX_VALUE);
+            y = cplex.intVarArray(n, buffer, Integer.MAX_VALUE);
+        } else {
+            x = cplex.intVarArray(n, 0, Integer.MAX_VALUE);
+            y = cplex.intVarArray(n, 0, Integer.MAX_VALUE);
+        }
         
         //orientation
         IloIntVar[][] leftOf = new IloIntVar[n][n]; //a_ik

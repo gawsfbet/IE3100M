@@ -273,7 +273,8 @@ public class Gui extends javax.swing.JFrame {
         if (!validInputs) {
             return;
         } else {
-            Main main = new Main(quantity, length, width, height, weight, buffer);
+            System.out.println(bufferBothSides);
+            Main main = new Main(quantity, length, width, height, weight, buffer, bufferBothSides);
             PackingConfig bestConfig = main.run();
 
             jTextPane1.setText(bestConfig.display());

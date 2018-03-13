@@ -50,10 +50,10 @@ public class BinStats {
         return this.arrangementForOneLayer;
     }
     
-    public void setAttributes(int quantityPerLayer, int totalQuantity, int buffer) {
+    public void setAttributes(int quantityPerLayer, int totalQuantity, int buffer, boolean bufferBothSides) {
         this.setQuantityPerLayer(quantityPerLayer);
         this.setTotalQuantity(totalQuantity);
-        this.setEmptyVolume(bin.getTrimmedVolume(buffer) - (totalQuantity * box.getVolume()));
+        this.setEmptyVolume(bin.getTrimmedVolume(buffer, bufferBothSides) - (totalQuantity * box.getVolume()));
     }
     
     private void setQuantityPerLayer(int quantityPerLayer) {

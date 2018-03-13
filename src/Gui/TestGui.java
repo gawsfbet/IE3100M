@@ -32,7 +32,6 @@ public class TestGui extends JPanel {
         this.binRect = new Rectangle(0, 0, 0, 0);
         this.boxRects = new ArrayList<>();
         
-        int buffer = BinStatsCalculator.getBuffer();
         this.bufferRects[0] = new Rectangle(0, 0, 0, 0);
         this.bufferRects[1] = new Rectangle(0, 0, 0, 0);
         this.bufferRects[2] = new Rectangle(0, 0, 0, 0);
@@ -60,10 +59,18 @@ public class TestGui extends JPanel {
         }
         
         int buffer = BinStatsCalculator.getBuffer();
-        this.bufferRects[0] = new Rectangle(0, 0, binStats.getBin().getLength() - buffer, buffer);
+        
+        if (BinStatsCalculator.getBufferBothSides()) {
+            this.bufferRects[0] = new Rectangle(0, 0, binStats.getBin().getLength() - buffer, buffer);
+            this.bufferRects[3] = new Rectangle(0, buffer, buffer, binStats.getBin().getWidth() - buffer);
+        } else {
+            this.bufferRects[0] = new Rectangle(0, 0, 0, 0);
+            this.bufferRects[3] = new Rectangle(0, 0, 0, 0);
+        }
+        
         this.bufferRects[1] = new Rectangle(binStats.getBin().getLength() - buffer, 0, buffer, binStats.getBin().getWidth() - buffer);
         this.bufferRects[2] = new Rectangle(buffer, binStats.getBin().getWidth() - buffer, binStats.getBin().getLength() - buffer, buffer);
-        this.bufferRects[3] = new Rectangle(0, buffer, buffer, binStats.getBin().getWidth() - buffer);
+        
     }
     
     @Override

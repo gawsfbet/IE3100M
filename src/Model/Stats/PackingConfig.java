@@ -63,12 +63,12 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
         
         if (lastBin == null) {//no remainder bins, either only 1 bin is needed or the boxes can fit into the main bins with no leftover
             if (totalBins == 1) { //case where only 1 bin is needed
-                setTotalEmptyVol((long) this.mainBinStats.getBin().getTrimmedVolume(BinStatsCalculator.getBuffer()) - (this.order.getQuantity() * this.order.getBox().getVolume()));
+                setTotalEmptyVol((long) this.mainBinStats.getBin().getTrimmedVolume(BinStatsCalculator.getBuffer(), BinStatsCalculator.getBufferBothSides()) - (this.order.getQuantity() * this.order.getBox().getVolume()));
             } else { //case where there are no leftovers
                 setTotalEmptyVol((long) totalBins * this.mainBinStats.getEmptyVolume());
             }
         } else {
-            setTotalEmptyVol(((long) totalBins * this.mainBinStats.getEmptyVolume()) + ((long) lastBin.getTrimmedVolume(BinStatsCalculator.getBuffer()) - (this.getRemainderBoxes() * this.order.getBox().getVolume())));
+            setTotalEmptyVol(((long) totalBins * this.mainBinStats.getEmptyVolume()) + ((long) lastBin.getTrimmedVolume(BinStatsCalculator.getBuffer(), BinStatsCalculator.getBufferBothSides()) - (this.getRemainderBoxes() * this.order.getBox().getVolume())));
         }
     }
     

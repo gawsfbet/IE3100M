@@ -38,13 +38,16 @@ public class QuantitySolver {
     private int boxVolume;
     private int binVolumes;
     
-    public QuantitySolver(Level2_Box box, int n, Level3_Bin bin, int buffer) throws IloException {
+    private final boolean bufferBothSides;
+    
+    public QuantitySolver(Level2_Box box, int n, Level3_Bin bin, int buffer, boolean bufferBothSides) throws IloException {
         this.cplex = new IloCplex();
         
         this.box = box;
         this.bin = bin;
         this.n = n;
         this.buffer = buffer;
+        this.bufferBothSides = bufferBothSides;
         
         this.boxVolume = box.getVolume();
         this.binVolumes = bin.getVolume();
@@ -59,8 +62,16 @@ public class QuantitySolver {
         IloIntVar[] P = cplex.boolVarArray(n); //whether it is in the box or not
         
         //coordinates
-        IloIntVar[] x = cplex.intVarArray(n, buffer, Integer.MAX_VALUE); //x_i
-        IloIntVar[] y = cplex.intVarArray(n, buffer, Integer.MAX_VALUE); //y_i
+        IloIntVar[] x; //x_i
+        IloIntVar[] y; //y_i
+        
+        if (bufferBothSides) {
+            x = cplex.intVarArray(n, buffer, Integer.MAX_VALUE);
+            y = cplex.intVarArray(n, buffer, Integer.MAX_VALUE);
+        } else {
+            x = cplex.intVarArray(n, 0, Integer.MAX_VALUE);
+            y = cplex.intVarArray(n, 0, Integer.MAX_VALUE);
+        }
         
         //orientation
         IloIntVar[][] leftOf = new IloIntVar[n][n]; //a_ik
@@ -118,7 +129,7 @@ public class QuantitySolver {
         
         if (cplex.solve()) {
             if (output) {
-                System.out.println("Free Space: " + (bin.getTrimmedVolume(buffer) - box.getVolume() * cplex.getObjValue()));
+                System.out.println("Free Space: " + (bin.getTrimmedVolume(buffer, bufferBothSides) - box.getVolume() * cplex.getObjValue()));
                 System.out.println("Number of boxes: " + cplex.getObjValue());
 
                 for (int i = 0; i < n; i++) {
