@@ -358,6 +358,9 @@
             <Property name="text" type="java.lang.String" value="Buffer both sides"/>
             <Property name="toolTipText" type="java.lang.String" value="Sets if the buffer is to be on one side or on both"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jCheckBox1ActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

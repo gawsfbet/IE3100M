@@ -23,6 +23,7 @@ public class Gui extends javax.swing.JFrame {
     private double weight = 0;
     
     private boolean validInputs;
+    private boolean bufferBothSides = false;
 
     /**
      * Creates new form Gui
@@ -157,6 +158,11 @@ public class Gui extends javax.swing.JFrame {
 
         jCheckBox1.setText("Buffer both sides");
         jCheckBox1.setToolTipText("Sets if the buffer is to be on one side or on both");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -383,6 +389,11 @@ public class Gui extends javax.swing.JFrame {
         
         jTextPane1.setText("Calculating...");
     }//GEN-LAST:event_jButton1MousePressed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+        bufferBothSides = jCheckBox1.isSelected();
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     /**
      * @param args the command line arguments
