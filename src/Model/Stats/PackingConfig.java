@@ -40,6 +40,10 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     public int getTotalBinsInclRemainder() {
         return this.getRemainderBoxes() == 0 ? this.totalBins : this.totalBins + 1;
     }
+    
+    public int getNumberOfMainBins() {
+        return this.order.getQuantity() / this.mainBinStats.getTotalQuantity();
+    }
 
     public int getRemainderBoxes() {
         return this.order.getQuantity() % this.mainBinStats.getTotalQuantity();
@@ -77,23 +81,26 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     }
     
     private void setTotalEmptyVol(long totalEmptyVol) {
-//>>>>>>> origin/master
         this.totalEmptyVol = totalEmptyVol;
     }
-
-    /**
-     * Modify this method if another attribute is to be minimised
-     * @param other
-     * @return
-     */
-    /*@Override
-    public int compareTo(PackingConfig other) {
-        if (this.getTotalBinsInclRemainder() == other.getTotalBinsInclRemainder()) {
-            return this.getTotalEmptyVol() <= other.getTotalEmptyVol() ? -1 : 1;
+    
+    public String display() {
+        String mainBinInfo = "Main Shipping Carton box:\n" +
+                "Name:\t\t" + this.mainBinStats.getBin().getFullName() + "\n" +
+                "Dimensions:\t\t" + this.mainBinStats.getBin().getDimensions() + "\n" +
+                "Quantity:\t\t" + this.getNumberOfMainBins() + "\n" +
+                "Layers perbox:\t" + this.mainBinStats.getBin().getHeight() / this.mainBinStats.getBox().getHeight();
+        
+        String remBinInfo;
+        if (lastBin != null) {
+            remBinInfo = "Shipping Carton box for remaining products:\n" +
+                    "Name: " + this.lastBin.getFullName();
         } else {
-            return this.getTotalBinsInclRemainder() - other.getTotalBinsInclRemainder();
+            remBinInfo = "No remaining shipping box needed";
         }
-    }*/
+        
+        return mainBinInfo + "\n\n" + remBinInfo;
+    }
 
     @Override
     public String toString() {

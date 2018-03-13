@@ -262,7 +262,7 @@ public class Gui extends javax.swing.JFrame {
             Main main = new Main(quantity, length, width, height, weight, buffer);
             PackingConfig bestConfig = main.run();
 
-            jTextPane1.setText(bestConfig.toString());
+            jTextPane1.setText(bestConfig.display());
 
             //jPanel1.paint();
             ((TestGui) jPanel1).setNewBinStats(bestConfig.getMainBinStats());
