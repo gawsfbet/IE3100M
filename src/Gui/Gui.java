@@ -83,6 +83,11 @@ public class Gui extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Open Sans", 0, 12)); // NOI18N
         jButton1.setText("Calculate");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jButton1MousePressed(evt);
+            }
+        });
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -335,7 +340,6 @@ public class Gui extends javax.swing.JFrame {
         } catch (NumberFormatException ex) {
             jTextField6.setText("0");
         }
-        jTextPane1.setText("Calculating...");
         
         Main main = new Main(quantity, length, width, height, weight, buffer);
         PackingConfig bestConfig = main.run();
@@ -346,6 +350,11 @@ public class Gui extends javax.swing.JFrame {
         ((TestGui) jPanel1).setNewBinStats(bestConfig.getMainBinStats());
         jPanel1.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
+        // TODO add your handling code here:
+        jTextPane1.setText("Calculating...");
+    }//GEN-LAST:event_jButton1MousePressed
 
     /**
      * @param args the command line arguments
