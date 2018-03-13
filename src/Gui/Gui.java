@@ -15,6 +15,14 @@ import javax.swing.JOptionPane;
  * @author Kevin-Notebook
  */
 public class Gui extends javax.swing.JFrame {
+    private int quantity = 0;
+    private int length = 0;
+    private int width = 0;
+    private int height = 0;
+    private int buffer = 0;
+    private double weight = 0;
+    
+    private boolean validInputs;
 
     /**
      * Creates new form Gui
@@ -247,13 +255,28 @@ public class Gui extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:        
+        if (!validInputs) {
+            return;
+        } else {
+            Main main = new Main(quantity, length, width, height, weight, buffer);
+            PackingConfig bestConfig = main.run();
+
+            jTextPane1.setText(bestConfig.toString());
+
+            //jPanel1.paint();
+            ((TestGui) jPanel1).setNewBinStats(bestConfig.getMainBinStats());
+            jPanel1.repaint();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
         // TODO add your handling code here:
-        int quantity = 0, length = 0, width = 0, height = 0, buffer = 0;
-        double weight = 0;
-        
+        validInputs = true;
         try {
             quantity = Integer.parseInt(jTextField1.getText());
             if (quantity <= 0) {
+                validInputs = false;
                 JOptionPane.showMessageDialog(this, "'Quantity' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -264,12 +287,14 @@ public class Gui extends javax.swing.JFrame {
             } else {
                 message = "'Quantity' is in the wrong format.";
             }
+            validInputs = false;
             JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
             length = Integer.parseInt(jTextField2.getText());
             if (length <= 0) {
+                validInputs = false;
                 JOptionPane.showMessageDialog(this, "'Length' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -280,12 +305,14 @@ public class Gui extends javax.swing.JFrame {
             } else {
                 message = "'Length' is in the wrong format.";
             }
+            validInputs = false;
             JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
             width = Integer.parseInt(jTextField3.getText());
             if (width <= 0) {
+                validInputs = false;
                 JOptionPane.showMessageDialog(this, "'Width' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -296,12 +323,14 @@ public class Gui extends javax.swing.JFrame {
             } else {
                 message = "'Width' is in the wrong format.";
             }
+            validInputs = false;
             JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
             height = Integer.parseInt(jTextField4.getText());
             if (height <= 0) {
+                validInputs = false;
                 JOptionPane.showMessageDialog(this, "'Height' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -312,12 +341,14 @@ public class Gui extends javax.swing.JFrame {
             } else {
                 message = "'Height' is in the wrong format.";
             }
+            validInputs = false;
             JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         try {
             weight = Double.parseDouble(jTextField5.getText());
             if (weight <= 0) {
+                validInputs = false;
                 JOptionPane.showMessageDialog(this, "'Weight' must be positive.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -328,6 +359,7 @@ public class Gui extends javax.swing.JFrame {
             } else {
                 message = "'Weight' is in the wrong format.";
             }
+            validInputs = false;
             JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -341,18 +373,6 @@ public class Gui extends javax.swing.JFrame {
             jTextField6.setText("0");
         }
         
-        Main main = new Main(quantity, length, width, height, weight, buffer);
-        PackingConfig bestConfig = main.run();
-        
-        jTextPane1.setText(bestConfig.toString());
-        
-        //jPanel1.paint();
-        ((TestGui) jPanel1).setNewBinStats(bestConfig.getMainBinStats());
-        jPanel1.repaint();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
-        // TODO add your handling code here:
         jTextPane1.setText("Calculating...");
     }//GEN-LAST:event_jButton1MousePressed
 
