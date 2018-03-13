@@ -58,6 +58,10 @@ public class Level3_Bin {
     public int getBaseArea() {
         return this.length * this.width;
     }
+    
+    public int getTrimmedBaseArea(int buffer, boolean bufferBothSides) {
+        return bufferBothSides ? (this.length - 2 * buffer) * (this.width - 2 * buffer) : (this.length - buffer) * (this.width - buffer);
+    }
 
     public int getVolume() {
         return this.length * this.width * this.height;

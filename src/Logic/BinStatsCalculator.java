@@ -69,7 +69,7 @@ public class BinStatsCalculator {
         Level2_Box box = binStats.getBox();
         Level3_Bin bin = binStats.getBin();
         
-        QuantitySolver solver = new QuantitySolver(box, calcUpperBound(box, bin), bin, buffer, bufferBothSides);
+        QuantitySolver solver = new QuantitySolver(box, calcUpperBound(box, bin, buffer, bufferBothSides), bin, buffer, bufferBothSides);
         
         int quantityPerLayer = solver.optimize(false);
         int totalQuantity = bufferBothSides ? quantityPerLayer * ((bin.getHeight() - 2 * buffer) / box.getHeight()) : quantityPerLayer * ((bin.getHeight() - buffer) / box.getHeight());
@@ -92,7 +92,7 @@ public class BinStatsCalculator {
         binStats.setArrangementForOneLayer(arrangement);
     }
     
-    private static int calcUpperBound(Level2_Box box, Level3_Bin bin) {
-        return bin.getBaseArea() / box.getBaseArea();
+    private static int calcUpperBound(Level2_Box box, Level3_Bin bin, int buffer, boolean bufferBothSides) {
+        return bin.getTrimmedBaseArea(buffer, bufferBothSides) / box.getBaseArea();
     }
 }
