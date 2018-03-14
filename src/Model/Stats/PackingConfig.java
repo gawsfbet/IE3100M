@@ -15,7 +15,7 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     private final BinStats mainBinStats;
     
 
-    private Level3_Bin lastBin;
+    private BinStats lastBinStats;
 
     private long totalEmptyVol;
     private int totalBins;
@@ -36,6 +36,10 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     public int getTotalBins() {
         return this.totalBins;
     }
+    
+    public BinStats getLastBinStats() {
+        return this.lastBinStats;
+    }
 
     public int getTotalBinsInclRemainder() {
         return this.getRemainderBoxes() == 0 ? this.totalBins : this.totalBins + 1;
@@ -50,30 +54,30 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     }
 
     public Level3_Bin getLastBin() {
-        return this.lastBin;
+        return this.lastBinStats.getBin();
     }
 
     public long getTotalEmptyVol() {
         return this.totalEmptyVol;
     }
     
-    public void setAttributes(Level3_Bin lastBin, int totalBins) {
-        setLastBin(lastBin);
+    public void setAttributes(BinStats lastBinStats, int totalBins) {
+        setLastBinStats(lastBinStats);
         setTotalBins(totalBins);
         
-        if (lastBin == null) {//no remainder bins, either only 1 bin is needed or the boxes can fit into the main bins with no leftover
+        if (lastBinStats == null) {//no remainder bins, either only 1 bin is needed or the boxes can fit into the main bins with no leftover
             if (totalBins == 1) { //case where only 1 bin is needed
                 setTotalEmptyVol((long) this.mainBinStats.getBin().getTrimmedVolume(BinStatsCalculator.getBuffer(), BinStatsCalculator.getBufferBothSides()) - (this.order.getQuantity() * this.order.getBox().getVolume()));
             } else { //case where there are no leftovers
                 setTotalEmptyVol((long) totalBins * this.mainBinStats.getEmptyVolume());
             }
         } else {
-            setTotalEmptyVol(((long) totalBins * this.mainBinStats.getEmptyVolume()) + ((long) lastBin.getTrimmedVolume(BinStatsCalculator.getBuffer(), BinStatsCalculator.getBufferBothSides()) - (this.getRemainderBoxes() * this.order.getBox().getVolume())));
+            setTotalEmptyVol(((long) totalBins * this.mainBinStats.getEmptyVolume()) + ((long) lastBinStats.getBin().getTrimmedVolume(BinStatsCalculator.getBuffer(), BinStatsCalculator.getBufferBothSides()) - (this.getRemainderBoxes() * this.order.getBox().getVolume())));
         }
     }
     
-    private void setLastBin(Level3_Bin lastBin) {
-        this.lastBin = lastBin;
+    private void setLastBinStats(BinStats lastBinStats) {
+        this.lastBinStats = lastBinStats;
     }
     
     private void setTotalBins(int totalBins) {
@@ -92,9 +96,10 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
                 "Layers perbox:\t" + this.mainBinStats.getBin().getHeight() / this.mainBinStats.getBox().getHeight();
         
         String remBinInfo;
-        if (lastBin != null) {
-            remBinInfo = "Shipping Carton box for remaining products:\n" +
-                    "Name: " + this.lastBin.getFullName();
+        if (lastBinStats != null) {
+            remBinInfo = "Remaining product boxes to be packed: " + this.getRemainderBoxes() + "\n" + 
+                    "Shipping Carton box for remaining products:\n" +
+                    "Name:\t\t" + this.lastBinStats.getBin().getFullName();
         } else {
             remBinInfo = "No remaining shipping box needed";
         }
@@ -109,7 +114,7 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
                 + " Boxes per Bin: " + this.mainBinStats.getTotalQuantity()
                 + " Bins Needed: " + totalBins + " empty vol: " + this.mainBinStats.getEmptyVolume();
         
-        return info + (lastBin == null ? " Last Bin not needed" : "\n" + lastBin.toString() + " to contain remaining " + this.getRemainderBoxes() + " boxes");
+        return info + (lastBinStats == null ? " Last Bin not needed" : "\n" + lastBinStats.getBin().toString() + " to contain remaining " + this.getRemainderBoxes() + " boxes");
     }
 
 }

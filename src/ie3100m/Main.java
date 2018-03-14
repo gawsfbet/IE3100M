@@ -88,6 +88,7 @@ public class Main {
                 return null;
             } else {
                 BinStatsCalculator.determineArrangement(bestConfig.getMainBinStats());
+                BinStatsCalculator.determineArrangement(bestConfig.getLastBinStats());
                 return bestConfig;
             }
         } catch (IOException ex) {

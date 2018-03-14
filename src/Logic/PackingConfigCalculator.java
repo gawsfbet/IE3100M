@@ -57,12 +57,12 @@ public class PackingConfigCalculator {
         } else if (binStats.getTotalQuantity() == 0) { //level 2 item cannot fit in the bin
             //do nothing
         } else {
-            Level3_Bin lastBin = null;
+            BinStats lastBinStat = null;
             if (packingConfig.getRemainderBoxes() != 0) {
-                lastBin = determineRemainderBin(packingConfig, candidateRemainingBins);
+                lastBinStat = determineRemainderBin(packingConfig, candidateRemainingBins);
             }
             
-            packingConfig.setAttributes(lastBin, order.getQuantity() / binStats.getTotalQuantity());
+            packingConfig.setAttributes(lastBinStat, order.getQuantity() / binStats.getTotalQuantity());
         }
     }
     
@@ -73,21 +73,21 @@ public class PackingConfigCalculator {
      * @param candidateRemainingBins The list of candidate bins to use for the remaining bin
      * @return The bin to be used to pack the remaining boxes of the order
      */
-    private static Level3_Bin determineRemainderBin(PackingConfig packingConfig, ArrayList<BinStats> candidateRemainingBins) {
+    private static BinStats determineRemainderBin(PackingConfig packingConfig, ArrayList<BinStats> candidateRemainingBins) {
         Level2_Box box = packingConfig.getOrder().getBox();
-        Level3_Bin lastBin = null;
+        BinStats lastBinStat = null;
         int emptyVol, minEmptyVol = Integer.MAX_VALUE, remainder = packingConfig.getRemainderBoxes();
         
         for (BinStats binStat : candidateRemainingBins) {
             if (binStat.getTotalQuantity() >= remainder) { //if the bin can contain all the remainder boxes
                 emptyVol = binStat.getBin().getTrimmedVolume(BinStatsCalculator.getBuffer(), BinStatsCalculator.getBufferBothSides()) - box.getVolume() * remainder;
                 if (emptyVol < minEmptyVol) {
-                    lastBin = binStat.getBin();
+                    lastBinStat = binStat;
                     minEmptyVol = emptyVol;
                 }
             }
         }
         
-        return lastBin;
+        return lastBinStat;
     }
 }
