@@ -13,22 +13,22 @@ import Model.Stats.PackingConfig;
  */
 public class RankSystem implements Comparable<RankSystem> {
     private PackingConfig config;
-    private double numRank;
-    private double volRank;
-    private double rankPoints;
+    private int numRank;
+    private int volRank;
+    private int rankPoints;
     
-    public RankSystem (PackingConfig config, double numRank, double volRank, double rankPoints){
+    public RankSystem (PackingConfig config, int numRank, int volRank, int rankPoints){
         this.config = config;
         this.rankPoints = rankPoints;
         this.numRank = numRank;
         this.volRank = volRank;
     }
     
-    public double getNumRank(){
+    public int getNumRank(){
         return this.numRank;
     }
     
-    public double getVolRank(){
+    public int getVolRank(){
         return this.volRank;
     }
     
@@ -36,7 +36,7 @@ public class RankSystem implements Comparable<RankSystem> {
         return this.config;
     }
     
-    public double getRankPoints(){
+    public int getRankPoints(){
         return this.rankPoints;
     }
     
@@ -51,17 +51,9 @@ public class RankSystem implements Comparable<RankSystem> {
     @Override
     public int compareTo(RankSystem other) {
         if (this.getRankPoints() == other.getRankPoints()) {
-            if (this.getConfig().getTotalBinsInclRemainder() < other.getConfig().getTotalBinsInclRemainder()) {
-                return -1;
-            } else {
-                return 1;
-            }
+            return this.getConfig().getTotalBinsInclRemainder() - other.getConfig().getTotalBinsInclRemainder();
         } else {
-            if (this.getRankPoints() < other.getRankPoints()){
-                return -1;
-            } else {
-                return 1;
-            }
+            return this.getRankPoints() - other.getRankPoints();
         }
     }
     
