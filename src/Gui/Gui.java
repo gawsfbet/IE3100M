@@ -334,10 +334,7 @@ public class Gui extends javax.swing.JFrame {
 
             //jPanel1.paint();
             ((TestGui) jPanel5).setNewBinStats(bestConfig.getMainBinStats());
-            
-            if (bestConfig.getLastBinStats() != null) {
-                ((TestGui) jPanel4).setNewBinStats(bestConfig.getLastBinStats());
-            }
+            ((TestGui) jPanel4).setNewBinStats(bestConfig.getLastBinStats());
             
             jPanel5.revalidate();
             jPanel4.revalidate();
