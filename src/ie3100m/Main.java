@@ -143,11 +143,14 @@ public class Main {
         Collections.sort(rankBins);
         
         
-//        for (RankSystem rank : rankBins) {
-//            System.out.println(rank.toString());
-//        }
         for (RankSystem rank : rankBins) {
-            if (rank.getConfig().getMainBinStats().getTotalQuantity() != 1) {
+            System.out.println(rank.toString());
+//            System.out.println(rank.getConfig().getMainBinStats().getTotalQuantity());
+        }
+        for (RankSystem rank : rankBins) {
+            if (rank.getConfig().getOrder().getQuantity() == 1) {
+                return rank.getConfig();
+            } else if (rank.getConfig().getMainBinStats().getTotalQuantity() != 1) {
                 return rank.getConfig();
             }            
         }
