@@ -20,9 +20,28 @@ public class PackingConfig /*implements Comparable<PackingConfig>*/ {
     private long totalEmptyVol;
     private int totalBins;
     
+    private double relativeVol;
+    private double relativeBinCount;
+    
     public PackingConfig (Order order, BinStats mainBinStats) {
         this.order = order;
         this.mainBinStats = mainBinStats;
+    }
+    
+    public void setRelativeVol(double relativeVol){
+        this.relativeVol = relativeVol;
+    }
+    
+    public void setRelativeBinCount(double relativeBinCount){
+        this.relativeBinCount = relativeBinCount;
+    }
+    
+    public double getRelativeVol(){
+        return this.relativeVol;
+    }
+    
+    public double getRelativeBinCount(){
+        return this.relativeBinCount;
     }
     
     public Order getOrder() {

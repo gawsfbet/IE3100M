@@ -118,6 +118,8 @@ public class Main {
                 return a.getTotalBinsInclRemainder() - b.getTotalBinsInclRemainder();
             }
         });
+        
+        
 
         Collections.sort(binsByVolume, (a, b) -> {
             if (a.getMainBinStats().getEmptyVolume() == b.getMainBinStats().getEmptyVolume()) {
@@ -127,20 +129,38 @@ public class Main {
             }
         });
 //        System.out.println("sorted 2 arrays by num and vol");
-        int rankPoints;
+        double rankPoints;
         ArrayList<RankSystem> rankBins = new ArrayList<>();
+        
+        /*
+        Normalize score of both bincount and volume from 0 to 1
+        */
+        int lowestCount = binsByNumbers.get(0).getTotalBinsInclRemainder();
+        int lowestVolume = binsByVolume.get(0).getMainBinStats().getEmptyVolume();
+        for(PackingConfig config: binsByNumbers){
+            int binCount = config.getTotalBinsInclRemainder();
+            double relativeBinCount = (double) lowestCount / binCount;
+            config.setRelativeBinCount(relativeBinCount);
+        }
+        
+        for (PackingConfig config: binsByVolume){
+            int volCount = config.getMainBinStats().getEmptyVolume();
+            double relativeVol = (double) lowestVolume / volCount;
+            config.setRelativeVol(relativeVol);
+        }
 
         for (int i = 0; i < binsByNumbers.size(); i++) {
             for (int j = 0; j < binsByVolume.size(); j++) {
                 if (binsByNumbers.get(i).getMainBinStats().getBin().getName() == binsByVolume.get(j).getMainBinStats().getBin().getName()) {
-                    rankPoints = i + j;
-                    RankSystem rank = new RankSystem(binsByVolume.get(j), i, j, rankPoints);
+                    rankPoints = binsByNumbers.get(i).getRelativeBinCount() + binsByVolume.get(j).getRelativeVol();
+                    RankSystem rank = new RankSystem(binsByVolume.get(j), binsByNumbers.get(i).getRelativeBinCount(), binsByVolume.get(j).getRelativeVol(), rankPoints);
                     rankBins.add(rank);
                 }
             }
-
         }
+        
         Collections.sort(rankBins);
+        Collections.reverse(rankBins);
         
         
         for (RankSystem rank : rankBins) {
