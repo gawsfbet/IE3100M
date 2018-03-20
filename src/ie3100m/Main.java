@@ -53,7 +53,7 @@ public class Main {
         this.bufferBothSides = bufferBothSides;
     }
 
-    public PackingConfig run() {
+    public PackingConfig run() throws IOException, IloException{
         /**
          * TODO: put order stats as input
          */
@@ -95,11 +95,9 @@ public class Main {
                 return bestConfig;
             }
         } catch (IOException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw ex;
         } catch (IloException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
+            throw ex;
         }
 
     }

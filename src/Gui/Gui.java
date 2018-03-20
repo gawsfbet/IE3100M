@@ -7,6 +7,9 @@ package Gui;
 
 import Model.Stats.PackingConfig;
 import ie3100m.Main;
+import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -324,22 +327,30 @@ public class Gui extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:        
-        if (!validInputs) {
-            return;
-        } else {
-            Main main = new Main(quantity, length, width, height, weight, buffer, bufferBothSides);
-            PackingConfig bestConfig = main.run();
+        try {
+            if (!validInputs) {
+                return;
+            } else {
+                Main main = new Main(quantity, length, width, height, weight, buffer, bufferBothSides);
+                PackingConfig bestConfig = main.run();
+                
+                jTextPane1.setText(bestConfig.display());
 
-            jTextPane1.setText(bestConfig.display());
-
-            //jPanel1.paint();
-            ((TestGui) jPanel5).setNewBinStats(bestConfig.getMainBinStats());
-            ((TestGui) jPanel4).setNewBinStats(bestConfig.getLastBinStats());
-            
-            jPanel5.revalidate();
-            jPanel4.revalidate();
-            jPanel5.repaint();
-            jPanel4.repaint();
+                //jPanel1.paint();
+                ((TestGui) jPanel5).setNewBinStats(bestConfig.getMainBinStats());
+                ((TestGui) jPanel4).setNewBinStats(bestConfig.getLastBinStats());
+                
+                jPanel5.revalidate();
+                jPanel4.revalidate();
+                jPanel5.repaint();
+                jPanel4.repaint();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            jTextPane1.setForeground(Color.red);
+            jTextPane1.setText("An error has occured.\n\n" + ex.toString());
+            jTextPane1.repaint();
+            jTextPane1.revalidate();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -445,8 +456,10 @@ public class Gui extends javax.swing.JFrame {
         } catch (NumberFormatException ex) {
             jTextField6.setText("0");
         }
-        
+        jTextPane1.setForeground(Color.black);
         jTextPane1.setText("Calculating...");
+        jTextPane1.repaint();
+        jTextPane1.revalidate();
     }//GEN-LAST:event_jButton1MousePressed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
