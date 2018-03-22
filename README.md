@@ -29,15 +29,21 @@ This program was created by NUS ISE SDP Group 11 for our System Design Project.
 6. Refer to the [Features](#features) section below for details of each field.<br>
 
 ## Fields
-#### `Quantity`<br>
+#### `Quantity`: Mandatory Field<br>
 The number of product boxes to be packed.<br>
-#### `Length`<br>
+Input must be an integer format.<br>
+#### `Length`: Mandatory Field<br>
 The length of the product box to be packed, in mm.<br>
-#### `Width`<br>
+Input must be an integer format.<br>
+#### `Width`: Mandatory Field<br>
 The width of the product box to be packed, in mm.<br>
-#### `Height`<br>
+Input must be an integer format.<br>
+#### `Height`: Mandatory Field<br>
 The height of the product box to be packed, in mm.<br>
-#### `Weight`<br>
+Input must be an integer format.<br>
+#### `Weight`: Mandatory Field<br>
 The weight of the product box to be packed, in kg.<br>
-#### `Buffer`<br>
+Input must be an integer or decimal format.<br>
+#### `Buffer`: Optional Field<br>
 The buffer to add to the sides of the shipping box, in mm.<br>
+> Buffer is assumed to be 0 if there is no input or if input is not in an integer format.
