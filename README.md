@@ -4,7 +4,8 @@ This program was created by NUS ISE SDP Group 11 for our System Design Project.
 # User Guide
 
 * [Installation Guide](#installation-guide)
-* [Fields](#fields)
+* [Inputs](#inputs)
+* [Outputs](#outputs)
 
 ## Installation Guide
 
@@ -28,22 +29,36 @@ This program was created by NUS ISE SDP Group 11 for our System Design Project.
     * **`Weight`** : 0.3
 6. Refer to the [Features](#features) section below for details of each field.<br>
 
-## Fields
-#### `Quantity`: Mandatory Field<br>
-The number of product boxes to be packed.<br>
-Input must be an integer format.<br>
-#### `Length`: Mandatory Field<br>
-The length of the product box to be packed, in mm.<br>
-Input must be an integer format.<br>
-#### `Width`: Mandatory Field<br>
-The width of the product box to be packed, in mm.<br>
-Input must be an integer format.<br>
-#### `Height`: Mandatory Field<br>
-The height of the product box to be packed, in mm.<br>
-Input must be an integer format.<br>
-#### `Weight`: Mandatory Field<br>
-The weight of the product box to be packed, in kg.<br>
-Input must be an integer or decimal format.<br>
-#### `Buffer`: Optional Field<br>
+## Inputs
+### Example: Jiang Sze has just received an order of 100 product boxes. They are sized 25cm x 20cm x 3.5cm and weigh 300 grams each. By client request, every shipping box must have a buffer of 2cm on all sides of the box. 
+#### `Quantity`
+The number of product boxes to be packed. Input must be an integer format.<br>
+This field is **mandatory**.<br>
+*For our example, '100' should be keyed into this field.*<br>
+#### `Length`
+The length of the product box to be packed, in mm. Input must be an integer format.<br>
+This field is **mandatory**.<br>
+*For our example, '250' should be keyed into this field (since 25cm = 250mm).*<br>
+#### `Width`
+The width of the product box to be packed, in mm. Input must be an integer format.<br>
+This field is **mandatory**.<br>
+*For our example, '200' should be keyed into this field (since 20cm = 200mm).*<br>
+#### `Height`
+The height of the product box to be packed, in mm. Input must be an integer format.<br>
+This field is **mandatory**.<br>
+*For our example, '35' should be keyed into this field (since 3.5cm = 35mm).*<br>
+#### `Weight`
+The weight of the product box to be packed, in kg. Input must be an integer or decimal format.<br>
+This field is **mandatory**.<br>
+*For our example, '0.3' should be keyed into this field (since 300g = 0.3kg).*<br>
+#### `Buffer`
 The buffer to add to the sides of the shipping box, in mm.<br>
-> Buffer is assumed to be 0 if there is no input or if input is not in an integer format.
+This field is **optional**. Buffer is assumed to be 0 if there is no input or if input is not in an integer format.<br>
+*For our example, '20' should be keyed into this field (since 2cm = 20mm).*<br>
+#### `Buffer all sides` checkbox<br>
+Check if you wish to add the buffer to all 6 sides of the shipping box.<br>
+Uncheck if you wish to only add the buffer to 3 sides of the shipping box (right, front, top).<br>
+*For our example, this box should be checked, since the client requests for all sides to be buffered.*<br>
+
+## Outputs
+TBC
