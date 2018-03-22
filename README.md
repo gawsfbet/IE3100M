@@ -28,7 +28,7 @@ This program was created by NUS ISE SDP Group 11 for our System Design Project.
     * **`Weight`** : 0.3
 6. Refer to the [Features](#features) section below for details of each field.<br>
 
-## Features
+## Fields
 #### `Quantity`<br>
 The number of product boxes to be packed.<br>
 #### `Length`<br>
