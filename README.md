@@ -20,7 +20,7 @@ This program was created by NUS ISE SDP Group 11 for our System Design Project.
 2. Double click the jar to run. Or might need to add the Djava thing in order to run it. TODO: check
 3. The GUI should appear in a few seconds.
     > <img src="images/GUIprototype.png" width="600">
-4. Type the fields in the `Order Specifications` panel and press <kbd>Enter</kbd> to determine the shipping carton boxes to be used.
+4. Type the fields in the `Order Specifications` panel and click <kbd>Calculate</kbd> to determine the shipping carton boxes to be used.
 5. Some example values you can try:
     * **`Quantity`** : 50
     * **`Length`** : 190
