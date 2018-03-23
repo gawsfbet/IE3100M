@@ -61,4 +61,9 @@ Uncheck if you wish to only add the buffer to 3 sides of the shipping box (right
 *For our example, this box should be checked, since the client requests for all sides to be buffered.*<br>
 
 ## Outputs
-TBC
+### Text Panel
+> <img src="images/outputpanel.png">
+The output panel will display the details of both the main shipping box to use, and the shipping box used to put any product boxes left over. 
+#### Main Shipping Carton Box
+This is the shipping box that should be used for the bulk of the order.
+`Name`: The name and ID of the box
