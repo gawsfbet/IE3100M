@@ -9,6 +9,7 @@ import Model.Product.Level3_Bin;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
@@ -27,7 +28,7 @@ public class FileUtils {
         String cvsSplitBy = ",";
         ArrayList<Level3_Bin> bins = new ArrayList<>();
 
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        BufferedReader br = new BufferedReader(new InputStreamReader(FileUtils.class.getClassLoader().getResourceAsStream(fileName)));
         while ((line = br.readLine()) != null) {
             // csv is a row
             String[] binData = line.split(cvsSplitBy);
