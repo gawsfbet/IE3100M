@@ -7,6 +7,9 @@ This program was created by NUS ISE SDP Group 11 for our System Design Project.
 * [Inputs](#inputs)
 * [Outputs](#outputs)
 
+## Demo
+![demo](https://user-images.githubusercontent.com/21094285/150575949-76e34e3c-0673-415d-a149-7ae58d7accd7.gif)
+
 ## Installation Guide
 
 ### Before you start
